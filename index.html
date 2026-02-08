@@ -3,144 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rozkład Sulejówek</title>
+<title>Rozkłady Sulejówek</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f5f5f5;
-}
-
-header {
-  padding: 8px 12px;
-  background:#1c1c1c;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  position: sticky;
-  top:0;
-  z-index:10;
-}
-
-.menu-btn {
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  width:24px;
-  height:18px;
-}
-
-.menu-btn div {
-  height:3px;
-  background:white;
-  border-radius:2px;
-}
-
-.nav {
-  display:none;
-  flex-direction:column;
-  background:#333;
-  position:absolute;
-  top:48px;
-  left:0;
-  width:200px;
-  border-radius:0 0 8px 8px;
-  padding:8px 0;
-}
-
-.nav a {
-  color:white;
-  padding:8px 12px;
-  text-decoration:none;
-}
-
-.nav a:hover {
-  background:#555;
-}
-
-input {
-  width: calc(100% - 24px);
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-  margin: 8px 12px;
-  box-sizing: border-box;
-}
-
-#results {
-  padding: 12px;
-}
-
-.stop {
-  background: white;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.time-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.line {
-  width: 36px;
-  text-align: center;
-  font-weight: bold;
-  color: white;
-  border-radius: 8px;
-  margin-right: 8px;
-  flex-shrink: 0;
-  padding: 2px 4px;
-}
-
-.a1 { background: #007bff; } /* niebieska */
-.a2 { background: #28a745; } /* zielona */
-
-.time {
-  font-size: 16px;
-  flex:1;
-}
-
-.countdown {
-  font-size:14px;
-  color:#555;
-  margin-left:8px;
-  white-space: nowrap;
-}
-
-@media (max-width: 480px){
-  input { font-size: 14px; padding:6px 10px; }
-  .time { font-size: 14px; }
-  .line { width: 30px; font-size: 12px; }
-  .countdown { font-size:12px; }
-}
+  body { font-family: Arial, sans-serif; margin:0; background:#f4f4f4; }
+  .header { display:flex; align-items:center; background:#333; color:#fff; padding:10px; position:sticky; top:0; z-index:100; }
+  .menu-icon { font-size:24px; cursor:pointer; margin-right:10px; }
+  .menu { display:none; flex-direction:column; background:#444; }
+  .menu a { color:#fff; padding:10px; text-decoration:none; border-bottom:1px solid #555; }
+  .menu a:hover { background:#555; }
+  .search-container { padding:10px; }
+  input[type="text"] { width:100%; padding:8px; font-size:16px; border-radius:5px; border:1px solid #ccc; }
+  .schedule-container { padding:10px; }
+  .stop-name { font-weight:bold; font-size:18px; margin-bottom:5px; }
+  .time-entry { display:flex; align-items:center; margin-bottom:5px; }
+  .line { width:30px; text-align:center; font-weight:bold; color:#fff; border-radius:3px; margin-right:10px; }
+  .A1 { background:blue; }
+  .A2 { background:green; }
+  .time { font-size:16px; }
+  @media(max-width:600px) {
+    input[type="text"] { font-size:14px; padding:6px; }
+    .stop-name { font-size:16px; }
+    .time { font-size:14px; }
+    .line { width:25px; font-size:14px; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="menu-btn" id="menuBtn">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-  <div class="nav" id="navMenu">
-    <a href="#" id="rozkladyTab">Rozkłady</a>
-  </div>
-  <div>Rozkład Sulejówek</div>
-</header>
+<div class="header">
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <div>Rozkłady Sulejówek</div>
+</div>
+<div class="menu" id="menu">
+  <a href="#" onclick="showSchedule()">Rozkłady</a>
+</div>
 
-<input type="text" id="search" placeholder="Wpisz przystanek...">
-<div id="results"></div>
+<div class="search-container">
+  <input type="text" id="stopInput" placeholder="Wpisz przystanek..." oninput="filterSchedule()">
+</div>
+
+<div class="schedule-container" id="scheduleContainer"></div>
 
 <script>
 const schedule = {
@@ -326,79 +228,68 @@ const schedule = {
                                       , "14:46", "15:51", "16:36", "17:36", "18:36", "19:36", "20:36", "21:36"],
 }
 
-const searchInput = document.getElementById("search");
-const resultsDiv = document.getElementById("results");
-const menuBtn = document.getElementById("menuBtn");
-const navMenu = document.getElementById("navMenu");
+const lineA1 = ["PKP Sulejówek Miłosna (01)","Sulejówek Krótka (01)"]; // wstaw wszystkie przystanki A1 w kolejności
+const lineA2_down = ["PKP Sulejówek (Kombatantów)","...","PKP Sulejówek Miłosna (03)"]; // w dół
+const lineA2_up = ["PKP Sulejówek Miłosna |03|","...","PKP Sulejówek (Kombatantów)"]; // w górę
 
-menuBtn.addEventListener("click", ()=>{
-  navMenu.style.display = navMenu.style.display==="flex"?"none":"flex";
-});
-
-// sprawdzanie czy dzisiaj jest pon-pt
-function isWeekday(){
-  const d = new Date();
-  const day = d.getDay(); // 0 = niedziela, 6 = sobota
-  return day >=1 && day <=5;
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
-function renderStop(stopName) {
-  resultsDiv.innerHTML = "";
-  const times = schedule[stopName];
-  if(!times) return;
-
-  const now = new Date();
-  times.forEach(time => {
-    const div = document.createElement("div");
-    div.className = "time-row";
-    
-    // określamy linię
-    let line = "A1";
-    let lineClass = "a1";
-    // A2 od kombatantów w dół
-    if(stopName === "PKP Sulejówek (Kombatantów)" || stopName === "Sulejówek Ogińskiego (02)"){
-      line = "A2";
-      lineClass = "a2";
-    }
-
-    const lineDiv = document.createElement("div");
-    lineDiv.className = `line ${lineClass}`;
-    lineDiv.textContent = line;
-
-    const timeDiv = document.createElement("div");
-    timeDiv.className = "time";
-    timeDiv.textContent = time;
-
-    const countdownDiv = document.createElement("div");
-    countdownDiv.className = "countdown";
-
-    if(isWeekday()){
-      const [h,m] = time.split(":").map(Number);
-      const t = new Date();
-      t.setHours(h, m, 0,0);
-      const diff = Math.round((t - now)/60000);
-      countdownDiv.textContent = diff>=0 ? `za ${diff} min` : "";
-    } else {
-      countdownDiv.textContent = "-";
-    }
-
-    div.appendChild(lineDiv);
-    div.appendChild(timeDiv);
-    div.appendChild(countdownDiv);
-    resultsDiv.appendChild(div);
-  });
+function showSchedule() {
+  document.getElementById("scheduleContainer").innerHTML = "";
 }
 
-searchInput.addEventListener("input", e => {
-  const query = e.target.value.toLowerCase();
-  const stopNames = Object.keys(schedule);
-  const match = stopNames.find(name => name.toLowerCase().includes(query));
-  if(match){
-    renderStop(match);
-  } else {
-    resultsDiv.innerHTML = "<p>Nie znaleziono przystanku</p>";
+function filterSchedule() {
+  const input = document.getElementById("stopInput").value.toLowerCase();
+  const container = document.getElementById("scheduleContainer");
+  container.innerHTML = "";
+
+  for (let stop in schedule) {
+    if (stop.toLowerCase().includes(input)) {
+      const stopDiv = document.createElement("div");
+      stopDiv.className = "stop-name";
+      stopDiv.textContent = stop;
+      container.appendChild(stopDiv);
+
+      schedule[stop].forEach(time => {
+        const entryDiv = document.createElement("div");
+        entryDiv.className = "time-entry";
+
+        const lineDiv = document.createElement("div");
+        lineDiv.className = "line";
+
+        if (lineA1.includes(stop)) lineDiv.classList.add("A1");
+        else if (lineA2_down.includes(stop) || lineA2_up.includes(stop)) lineDiv.classList.add("A2");
+        else lineDiv.textContent = "";
+
+        lineDiv.textContent = lineDiv.classList.contains("A1") ? "A1" : lineDiv.classList.contains("A2") ? "A2" : "";
+
+        const timeDiv = document.createElement("div");
+        timeDiv.className = "time";
+        timeDiv.textContent = time + " (" + minutesToDeparture(time) + " min)";
+
+        entryDiv.appendChild(lineDiv);
+        entryDiv.appendChild(timeDiv);
+        container.appendChild(entryDiv);
+      });
+    }
   }
-});
+}
+
+function minutesToDeparture(timeStr) {
+  const now = new Date();
+  const day = now.getDay();
+  if (day === 0 || day === 6) return "-"; // weekend brak odliczania
+
+  const [h, m] = timeStr.split(":").map(Number);
+  const dep = new Date();
+  dep.setHours(h, m, 0, 0);
+  let diff = Math.round((dep - now)/60000);
+  if (diff < 0) diff += 24*60;
+  return diff;
+}
 </script>
 
 </body>
