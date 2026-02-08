@@ -3,76 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rozkład jazdy</title>
-
+<title>Rozkład Sulejówek</title>
 <style>
-body{
-  margin:0;
-  font-family:system-ui,Arial;
-  background:#111;
-  color:#fff;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f5f5;
 }
 
-header{
-  padding:14px;
+header {
+  padding: 8px 12px;
   background:#1c1c1c;
-  position:sticky;
-  top:0;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  font-size:16px;
-}
-
-.card{
-  background:#1e1e1e;
-  margin:12px;
-  padding:14px;
-  border-radius:18px;
-}
-
-.stop{
-  font-weight:bold;
-  margin-bottom:8px;
-}
-
-.row{
+  color:white;
   display:flex;
   align-items:center;
-  gap:10px;
-  margin:4px 0;
+  justify-content: space-between;
+  position: sticky;
+  top:0;
+  z-index:10;
 }
 
-.badge{
-  font-weight:bold;
-  padding:3px 8px;
-  border-radius:8px;
-  font-size:13px;
-  color:#000;
-  min-width:34px;
-  text-align:center;
+.menu-btn {
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  width:24px;
+  height:18px;
 }
 
-.time{
-  font-size:20px;
+.menu-btn div {
+  height:3px;
+  background:white;
+  border-radius:2px;
+}
+
+.nav {
+  display:none;
+  flex-direction:column;
+  background:#333;
+  position:absolute;
+  top:48px;
+  left:0;
+  width:200px;
+  border-radius:0 0 8px 8px;
+  padding:8px 0;
+}
+
+.nav a {
+  color:white;
+  padding:8px 12px;
+  text-decoration:none;
+}
+
+.nav a:hover {
+  background:#555;
+}
+
+input {
+  width: calc(100% - 24px);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  margin: 8px 12px;
+  box-sizing: border-box;
+}
+
+#results {
+  padding: 12px;
+}
+
+.stop {
+  background: white;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.line {
+  width: 36px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  border-radius: 8px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  padding: 2px 4px;
+}
+
+.a1 { background: #007bff; } /* niebieska */
+.a2 { background: #28a745; } /* zielona */
+
+.time {
+  font-size: 16px;
+  flex:1;
+}
+
+.countdown {
+  font-size:14px;
+  color:#555;
+  margin-left:8px;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px){
+  input { font-size: 14px; padding:6px 10px; }
+  .time { font-size: 14px; }
+  .line { width: 30px; font-size: 12px; }
+  .countdown { font-size:12px; }
 }
 </style>
 </head>
 <body>
 
 <header>
-  <input id="search" placeholder="Wpisz przystanek...">
+  <div class="menu-btn" id="menuBtn">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div class="nav" id="navMenu">
+    <a href="#" id="rozkladyTab">Rozkłady</a>
+  </div>
+  <div>Rozkład Sulejówek</div>
 </header>
 
+<input type="text" id="search" placeholder="Wpisz przystanek...">
 <div id="results"></div>
 
 <script>
-/* ===== WKLEJ TU SWOJE scheduleData ===== */
-const scheduleData = {
+const schedule = {
   "PKP Sulejówek Miłosna (01)":  ["05:38", "06:07", "06:38", "07:04", "07:28", "08:10", "08:34", "09:10"
                                     , "10:08", "11:25", "12:28", "13:39", "14:30", "15:24", "16:25", "16:56"
                                     , "17:25", "17:56", "18:25", "18:56", "19:56", "20:56"],
@@ -255,57 +326,82 @@ const scheduleData = {
                                       , "14:46", "15:51", "16:36", "17:36", "18:36", "19:36", "20:36", "21:36"],
 }
 
-const lineColors = {
-  A1: "#4da6ff",
-  A2: "#3cb371"
+const searchInput = document.getElementById("search");
+const resultsDiv = document.getElementById("results");
+const menuBtn = document.getElementById("menuBtn");
+const navMenu = document.getElementById("navMenu");
+
+menuBtn.addEventListener("click", ()=>{
+  navMenu.style.display = navMenu.style.display==="flex"?"none":"flex";
+});
+
+// sprawdzanie czy dzisiaj jest pon-pt
+function isWeekday(){
+  const d = new Date();
+  const day = d.getDay(); // 0 = niedziela, 6 = sobota
+  return day >=1 && day <=5;
 }
 
-// od którego przystanku zaczyna się linia A2
-const A2_START = "PKP Sulejówek (Kombatantów)"
+function renderStop(stopName) {
+  resultsDiv.innerHTML = "";
+  const times = schedule[stopName];
+  if(!times) return;
 
-const results = document.getElementById("results")
-const search = document.getElementById("search")
+  const now = new Date();
+  times.forEach(time => {
+    const div = document.createElement("div");
+    div.className = "time-row";
+    
+    // określamy linię
+    let line = "A1";
+    let lineClass = "a1";
+    // A2 od kombatantów w dół
+    if(stopName === "PKP Sulejówek (Kombatantów)" || stopName === "Sulejówek Ogińskiego (02)"){
+      line = "A2";
+      lineClass = "a2";
+    }
 
-function getLines(stopName){
-  // jeśli stop jest przed Kombatantów → A1
-  // jeśli stop jest Kombatantów lub dalej → A2
-  return stopName.localeCompare(A2_START) >= 0 ? ["A2"] : ["A1"]
+    const lineDiv = document.createElement("div");
+    lineDiv.className = `line ${lineClass}`;
+    lineDiv.textContent = line;
+
+    const timeDiv = document.createElement("div");
+    timeDiv.className = "time";
+    timeDiv.textContent = time;
+
+    const countdownDiv = document.createElement("div");
+    countdownDiv.className = "countdown";
+
+    if(isWeekday()){
+      const [h,m] = time.split(":").map(Number);
+      const t = new Date();
+      t.setHours(h, m, 0,0);
+      const diff = Math.round((t - now)/60000);
+      countdownDiv.textContent = diff>=0 ? `za ${diff} min` : "";
+    } else {
+      countdownDiv.textContent = "-";
+    }
+
+    div.appendChild(lineDiv);
+    div.appendChild(timeDiv);
+    div.appendChild(countdownDiv);
+    resultsDiv.appendChild(div);
+  });
 }
 
-function render(){
-  const q = search.value.toLowerCase()
-  results.innerHTML = ""
-
-  if(!q) return
-
-  Object.entries(scheduleData)
-    .filter(([stop]) => stop.toLowerCase().includes(q))
-    .forEach(([stop, times]) => {
-
-      const lines = getLines(stop)
-
-      let html = `<div class="card"><div class="stop">${stop}</div>`
-
-      times.forEach(t => {
-        lines.forEach(line => {
-          html += `
-            <div class="row">
-              <div class="badge" style="background:${lineColors[line]}">
-                ${line}
-              </div>
-              <div class="time">${t}</div>
-            </div>
-          `
-        })
-      })
-
-      html += `</div>`
-      results.innerHTML += html
-    })
-}
-
-search.addEventListener("input", render)
+searchInput.addEventListener("input", e => {
+  const query = e.target.value.toLowerCase();
+  const stopNames = Object.keys(schedule);
+  const match = stopNames.find(name => name.toLowerCase().includes(query));
+  if(match){
+    renderStop(match);
+  } else {
+    resultsDiv.innerHTML = "<p>Nie znaleziono przystanku</p>";
+  }
+});
 </script>
+
 </body>
 </html>
+
 
