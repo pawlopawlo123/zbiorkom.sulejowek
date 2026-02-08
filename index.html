@@ -28,18 +28,23 @@ input{
   font-size:16px;
 }
 
-.stop{
-  margin:14px;
-  padding:14px;
+.card{
   background:#1e1e1e;
+  margin:12px;
+  padding:14px;
   border-radius:18px;
+}
+
+.stop{
+  font-weight:bold;
+  margin-bottom:8px;
 }
 
 .row{
   display:flex;
   align-items:center;
   gap:10px;
-  margin:5px 0;
+  margin:4px 0;
 }
 
 .badge{
@@ -66,7 +71,7 @@ input{
 <div id="results"></div>
 
 <script>
-/* ===== TWOJE DANE ===== */
+/* ===== WKLEJ TU SWOJE scheduleData ===== */
 const scheduleData = {
   "PKP Sulejówek Miłosna (01)":  ["05:38", "06:07", "06:38", "07:04", "07:28", "08:10", "08:34", "09:10"
                                     , "10:08", "11:25", "12:28", "13:39", "14:30", "15:24", "16:25", "16:56"
@@ -250,49 +255,56 @@ const scheduleData = {
                                       , "14:46", "15:51", "16:36", "17:36", "18:36", "19:36", "20:36", "21:36"],
 }
 
-const lineColors={
-  A1:"#4da6ff",
-  A2:"#3cb371"
+const lineColors = {
+  A1: "#4da6ff",
+  A2: "#3cb371"
 }
 
-function getLineForStop(){
-  return "A1"
-  return "A2"
-}
+// od którego przystanku zaczyna się linia A2
+const A2_START = "PKP Sulejówek (Kombatantów)"
 
-const results=document.getElementById("results")
-const search=document.getElementById("search")
+const results = document.getElementById("results")
+const search = document.getElementById("search")
+
+function getLines(stopName){
+  // jeśli stop jest przed Kombatantów → A1
+  // jeśli stop jest Kombatantów lub dalej → A2
+  return stopName.localeCompare(A2_START) >= 0 ? ["A2"] : ["A1"]
+}
 
 function render(){
-  const q=search.value.toLowerCase()
-  results.innerHTML=""
+  const q = search.value.toLowerCase()
+  results.innerHTML = ""
+
+  if(!q) return
 
   Object.entries(scheduleData)
-    .filter(([stop])=>stop.toLowerCase().includes(q))
-    .forEach(([stop,times])=>{
-      const line=getLineForStop()
-      const color=lineColors[line]
+    .filter(([stop]) => stop.toLowerCase().includes(q))
+    .forEach(([stop, times]) => {
 
-      let html=`<div class="stop"><b>${stop}</b>`
+      const lines = getLines(stop)
 
-      times.forEach(t=>{
-        html+=`
-          <div class="row">
-            <div class="badge" style="background:${color}">
-              ${line}
+      let html = `<div class="card"><div class="stop">${stop}</div>`
+
+      times.forEach(t => {
+        lines.forEach(line => {
+          html += `
+            <div class="row">
+              <div class="badge" style="background:${lineColors[line]}">
+                ${line}
+              </div>
+              <div class="time">${t}</div>
             </div>
-            <div class="time">${t}</div>
-          </div>
-        `
+          `
+        })
       })
 
-      html+=`</div>`
-      results.innerHTML+=html
+      html += `</div>`
+      results.innerHTML += html
     })
 }
 
-search.addEventListener("input",render)
-render()
+search.addEventListener("input", render)
 </script>
 </body>
 </html>
