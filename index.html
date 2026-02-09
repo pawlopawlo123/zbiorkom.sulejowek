@@ -76,6 +76,24 @@ height:10px;
 background:#1e88ff;
 border-radius:50%;
 }
+
+ .time-box{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  font-weight:600;
+}
+
+.start-time{
+  font-size:18px;
+}
+
+.end-time{
+  font-size:14px;
+  opacity:.6;
+  margin-top:2px;
+}
+
 </style>
 </head>
 <body>
@@ -154,8 +172,9 @@ function renderCourses(){
          Do: <b>PKP Sulejówek Miłosna (01)</b>
        </div>
      </div>
-     <div class="times">
-       ${start}   ${end}<br>
+     <div class="time-box">
+      <div class="start-time">${start}</div>
+      <div class="end-time">${end}</div>
        <span style="color:#6faeff;font-size:13px">
          ${diff>0?`za ${diff} min`:"teraz"}
        </span>
