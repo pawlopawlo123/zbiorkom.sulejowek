@@ -101,7 +101,7 @@ border-radius:50%;
 <div class="header">Numer boczny TST95466</div>
 
 <div id="courses"></div>
-<div id="route" class="route"></div>
+
 
 <script>
 const stops = [
@@ -164,7 +164,7 @@ function renderCourses(){
 
    if(diff>=-1){
    coursesBox.innerHTML+=`
-   <div class="course" onclick="showRoute()">
+   <div class="course">
      <div class="left">
        <div class="line">A1</div>
        <div class="info">
@@ -184,17 +184,7 @@ function renderCourses(){
  });
 }
 
-function showRoute(){
- routeBox.innerHTML="";
- stops.forEach(s=>{
-  routeBox.innerHTML+=`
-  <div class="stop">
-    <div class="dot"></div>${s}
-  </div>`;
- });
- routeBox.style.display="block";
- routeBox.scrollIntoView({behavior:"smooth"});
-}
+
 
 renderCourses();
 setInterval(renderCourses,30000);
