@@ -80,7 +80,7 @@ border-radius:50%;
 </head>
 <body>
 
-<div class="header">Linia A1 – wybierz kurs</div>
+<div class="header">Linia A1 – odjazdy live</div>
 
 <div id="courses"></div>
 <div id="route" class="route"></div>
@@ -151,11 +151,11 @@ function renderCourses(){
        <div class="line">A1</div>
        <div class="info">
          Z: <b>PKP Sulejówek Miłosna (01)</b><br>
-         Do: <b>PKP Sulejówek Miłosna</b>
+         Do: <b>PKP Sulejówek Miłosna (01)</b>
        </div>
      </div>
      <div class="times">
-       ${start} → ${end}<br>
+       ${start} ${end}<br>
        <span style="color:#6faeff;font-size:13px">
          ${diff>0?`za ${diff} min`:"teraz"}
        </span>
