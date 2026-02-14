@@ -79,31 +79,46 @@ body{
 
 <script>
 
+// ROZKŁADY
 const lines = {
   "A1": {
-    color:"#1e88ff", // NIEBIESKI
+    color:"#1e88ff",
     direction:"PKP Sulejówek Miłosna",
-    times:[
-      "05:47","06:16","06:47","07:13","07:37","08:19",
-      "08:43","09:19","10:17","11:34","12:37","13:48",
-      "14:39","15:33","16:34","17:05","17:34","18:05",
+    weekday:[
+      "05:47","06:16","06:47","07:13","07:37",
+      "08:19","09:19","10:17","11:34",
+      "12:37","13:48","14:39","15:33",
+      "16:34","17:05","17:34","18:05",
       "18:34","19:05","20:05","21:05"
-    ]
+    ],
+    weekend:[] // BRAK KURSU W WEEKEND
   },
 
   "P02": {
-    color:"#e53935", // CZERWONY
+    color:"#e53935",
     direction:"Rynek (Stanisławów)",
-    times:[
+    weekday:[
+      "04:57","05:57","06:57","07:57",
+      "09:27","11:27","13:27","14:57",
+      "15:57","16:57","17:57","18:57",
+      "19:57","21:27"
+    ],
+    weekend:[
       "05:57","09:57","12:57","15:57",
       "18:57"
     ]
   },
 
   "P03": {
-    color:"#00c853", // ZIELONY
+    color:"#00c853",
     direction:"Michałów-Pętla",
-    times:[
+    weekday:[
+      "04:27","05:27","06:27","07:27",
+      "08:27","10:27","12:27","14:27",
+      "15:27","16:27","17:27","18:27",
+      "19:27","20:27","22:27"
+    ],
+    weekend:[
       "08:27","11:27","14:27","17:27",
       "21:27"
     ]
@@ -112,6 +127,11 @@ const lines = {
 
 
 const coursesBox = document.getElementById("courses");
+
+function isWeekend(){
+  const day = new Date().getDay();
+  return day === 0 || day === 6; // niedziela=0, sobota=6
+}
 
 function minutesLeft(time){
   const [h,m]=time.split(":").map(Number);
@@ -123,13 +143,16 @@ function minutesLeft(time){
 
 function renderCourses(){
   coursesBox.innerHTML="";
-
   let allDepartures=[];
+
+  const weekend = isWeekend();
 
   Object.keys(lines).forEach(lineNumber=>{
     const line = lines[lineNumber];
 
-    line.times.forEach(start=>{
+    const schedule = weekend ? line.weekend : line.weekday;
+
+    schedule.forEach(start=>{
       const diff=minutesLeft(start);
 
       if(diff>=-1){
