@@ -3,186 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Linia A1</title>
+<title>Odjazdy</title>
+
 <style>
 body{
-margin:0;
-background:#0f1720;
-color:white;
-font-family:system-ui;
+  margin:0;
+  background:#0f1720;
+  color:white;
+  font-family:system-ui;
 }
+
 .header{
-padding:15px;
-text-align:center;
-font-size:20px;
-font-weight:600;
+  padding:18px;
+  text-align:center;
+  font-size:20px;
+  font-weight:600;
+  background:#0b111a;
+  box-shadow:0 2px 10px #000;
 }
 
 .course{
-background:#050b14;
-margin:12px;
-border-radius:14px;
-padding:14px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-box-shadow:0 0 12px #000;
-cursor:pointer;
+  background:#050b14;
+  margin:12px;
+  border-radius:14px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 0 12px #000;
 }
 
 .left{
-display:flex;
-gap:12px;
-align-items:center;
+  display:flex;
+  gap:14px;
+  align-items:center;
 }
 
 .line{
-background:#1e88ff;
-padding:10px 14px;
-border-radius:12px;
-font-weight:700;
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:700;
+  min-width:55px;
+  text-align:center;
+  color:white;
 }
 
 .info{
-font-size:14px;
+  font-size:14px;
 }
 
-.info b{color:#8fb7ff}
-
-.times{
-text-align:right;
-font-size:16px;
+.info b{
+  color:#8fb7ff
 }
 
-.route{
-display:none;
-margin:10px;
-background:#050b14;
-border-radius:14px;
-padding:10px;
-}
-
-.stop{
-display:flex;
-align-items:center;
-gap:12px;
-padding:8px 0;
-border-bottom:1px solid #1f2a3a;
-}
-
-.dot{
-width:10px;
-height:10px;
-background:#1e88ff;
-border-radius:50%;
-}
-
- .time-box{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
+.time-box{
+  text-align:right;
   font-weight:600;
 }
 
 .start-time{
-  font-size:18px;
+  font-size:20px;
 }
 
-.end-time{
-  font-size:14px;
-  opacity:.6;
-  margin-top:2px;
+.countdown{
+  font-size:13px;
+  color:#6faeff;
 }
-
 </style>
 </head>
+
 <body>
 
 <div class="header">Przystanek: Łukasińskiego 01</div>
-
 <div id="courses"></div>
 
-
 <script>
-const stops = [
-"PKP Sulejówek Miłosna (01)",
-"Sulejówek Krótka (01)",
-"Sulejówek Wyspiańskiego (02)",
-"Sulejówek Szekspira (02)",
-"Sulejówek Dąbrowskiego (02)",
-"Sulejówek Tramwajowa (02)",
-"Sulejówek Długa (01)",
-"Sulejówek Łomżyńska (01)",
-"Sulejówek Partyzantów (01)",
-"Sulejówek Łukasińskiego (01)",
-"Sulejówek Dąbrowskiego (01)",
-"Sulejówek Szekspira (01)",
-"Sulejówek Wyspiańskiego (01)",
-"Sulejówek Głowackiego (02)",
-"PKP Sulejówek Miłosna (02)",
-"Sulejówek Miłosna-Pomnik (01)",
-"Sulejówek Kopernika (02)",
-"Sulejówek Wilsona (04)",
-"Sulejówek Polna (02)",
-"Sulejówek Bydgoska (02)",
-"Sulejówek Warecka (01)",
-"Sulejówek Cicha (01)",
-"Sulejówek Zelwerowicza (01)",
-"PKP Sulejówek Miłosna (01)"
-];
 
-const startTimes = [
-"05:47","06:16","06:47","07:13","07:37","08:19",
-"08:43","09:19","10:17","11:34","12:37","13:48",
-"14:39","15:33","16:34","17:05","17:34","18:05",
-"18:34","19:05","20:05","21:05"
-];
+const lines = {
+  "A1": {
+    color:"#1e88ff", // NIEBIESKI
+    direction:"PKP Sulejówek Miłosna",
+    times:[
+      "05:47","06:16","06:47","07:13","07:37","08:19",
+      "08:43","09:19","10:17","11:34","12:37","13:48",
+      "14:39","15:33","16:34","17:05","17:34","18:05",
+      "18:34","19:05","20:05","21:05"
+    ]
+  },
 
+  "P02": {
+    color:"#e53935", // CZERWONY
+    direction:"Rynek (Stanisławów)",
+    times:[
+      "05:57","09:57","12:57","15:57",
+      "18:57"
+    ]
+  },
+
+  "P03": {
+    color:"#00c853", // ZIELONY
+    direction:"Michałów-Pętla",
+    times:[
+      "08:27","11:27","14:27","17:27",
+      "21:27"
+    ]
+  }
+};
 
 
 const coursesBox = document.getElementById("courses");
-const routeBox = document.getElementById("route");
 
 function minutesLeft(time){
- const [h,m]=time.split(":").map(Number);
- const now=new Date();
- const target=new Date();
- target.setHours(h,m,0,0);
- return Math.round((target-now)/60000);
+  const [h,m]=time.split(":").map(Number);
+  const now=new Date();
+  const target=new Date();
+  target.setHours(h,m,0,0);
+  return Math.round((target-now)/60000);
 }
 
 function renderCourses(){
- coursesBox.innerHTML="";
- startTimes.forEach((start,i)=>{
-   const end=endTimes[i];
-   const diff=minutesLeft(start);
+  coursesBox.innerHTML="";
 
-   if(diff>=-1){
-   coursesBox.innerHTML+=`
-   <div class="course">
-     <div class="left">
-       <div class="line">A1</div>
-       <div class="info">
-         Z: <b>PKP Sulejówek Miłosna (01)</b><br>
-         Do: <b>PKP Sulejówek Miłosna (01)</b>
-       </div>
-     </div>
-     <div class="time-box">
-      <div class="start-time">${start}</div>
-      <div class="end-time">${end}</div>
-       <span style="color:#6faeff;font-size:13px">
-         ${diff>0?`za ${diff} min`:"teraz"}
-       </span>
-     </div>
-   </div>`;
-   }
- });
+  let allDepartures=[];
+
+  Object.keys(lines).forEach(lineNumber=>{
+    const line = lines[lineNumber];
+
+    line.times.forEach(start=>{
+      const diff=minutesLeft(start);
+
+      if(diff>=-1){
+        allDepartures.push({
+          line:lineNumber,
+          color:line.color,
+          direction:line.direction,
+          time:start,
+          diff:diff
+        });
+      }
+    });
+  });
+
+  allDepartures.sort((a,b)=>a.diff-b.diff);
+
+  allDepartures.forEach(dep=>{
+    coursesBox.innerHTML+=`
+      <div class="course">
+        <div class="left">
+          <div class="line" style="background:${dep.color}">
+            ${dep.line}
+          </div>
+          <div class="info">
+            Kierunek: <b>${dep.direction}</b>
+          </div>
+        </div>
+
+        <div class="time-box">
+          <div class="start-time">${dep.time}</div>
+          <div class="countdown">
+            ${dep.diff>0?`za ${dep.diff} min`:"teraz"}
+          </div>
+        </div>
+      </div>
+    `;
+  });
 }
-
-
 
 renderCourses();
 setInterval(renderCourses,30000);
+
 </script>
 
 </body>
