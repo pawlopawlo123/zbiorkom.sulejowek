@@ -13,53 +13,15 @@ body{
   font-family:system-ui;
 }
 
-/* HEADER */
 .header{
   padding:18px;
+  text-align:center;
   font-size:20px;
   font-weight:600;
   background:#0b111a;
   box-shadow:0 2px 10px #000;
-  display:flex;
-  align-items:center;
-  gap:12px;
 }
 
-.menu-btn{ font-size:24px; cursor:pointer; }
-
-/* MENU */
-.side-menu{
-  position:fixed;
-  top:0;
-  left:-260px;
-  width:240px;
-  height:100%;
-  background:#0b111a;
-  box-shadow:2px 0 12px #000;
-  padding-top:70px;
-  transition:.25s;
-  z-index:1000;
-}
-
-.side-menu.open{ left:0; }
-
-.stop-item{
-  padding:15px 22px;
-  cursor:pointer;
-  font-weight:600;
-}
-.stop-item:hover{ background:#111c2a; }
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:none;
-  z-index:900;
-}
-.overlay.show{ display:block; }
-
-/* ODJAZDY */
 .course{
   background:#050b14;
   margin:12px;
@@ -71,7 +33,11 @@ body{
   box-shadow:0 0 12px #000;
 }
 
-.left{ display:flex; gap:14px; align-items:center; }
+.left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
 
 .line{
   padding:10px 14px;
@@ -82,109 +48,89 @@ body{
   color:white;
 }
 
-.info{ font-size:14px; }
-.info b{ color:#8fb7ff }
+.info{
+  font-size:14px;
+}
 
-.time-box{ text-align:right; font-weight:600; }
-.start-time{ font-size:20px; }
-.countdown{ font-size:13px; color:#6faeff; }
+.info b{
+  color:#8fb7ff
+}
+
+.time-box{
+  text-align:right;
+  font-weight:600;
+}
+
+.start-time{
+  font-size:20px;
+}
+
+.countdown{
+  font-size:13px;
+  color:#6faeff;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <span class="menu-btn" onclick="toggleMenu()">☰</span>
-  <span id="stopName">Łukasińskiego 01</span>
-</div>
-
-<div class="side-menu" id="sideMenu"></div>
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
+<div class="header">Przystanek: Łukasińskiego 01</div>
 <div id="courses"></div>
 
 <script>
 
-/* MENU ELEMENTY */
-const sideMenu=document.getElementById("sideMenu");
-const overlay=document.getElementById("overlay");
-const stopName=document.getElementById("stopName");
-const coursesBox=document.getElementById("courses");
-
-/* OTWIERANIE MENU */
-function toggleMenu(){
-  sideMenu.classList.toggle("open");
-  overlay.classList.toggle("show");
-}
-
-/* DANE PRZYSTANKÓW */
-const stops={
-"Łukasińskiego 01":{
-  "A1":{color:"#1e88ff",
+// ROZKŁADY
+const lines = {
+  "A1": {
+    color:"#1e88ff",
     direction:"PKP Sulejówek Miłosna",
-    weekday:["05:47","06:16","06:47","07:13","07:37","08:19","09:19","10:17",
-             "11:34","12:37","13:48","14:39","15:33","16:34","17:05",
-             "17:34","18:05","18:34","19:05","20:05","21:05"],
-    weekend:[]},
-  "P02":{color:"#e53935",
-    direction:"Rynek (Stanisławów)",
-    weekday:["04:57","05:57","06:57","07:57","09:27","11:27","13:27",
-             "14:57","15:57","16:57","17:57","18:57","19:57","21:27"],
-    weekend:["05:57","09:57","12:57","15:57","18:57"]},
-  "P03":{color:"#00c853",
-    direction:"Michałów-Pętla",
-    weekday:["04:27","05:27","06:27","07:27","08:27","10:27","12:27","14:27",
-             "15:27","16:27","17:27","18:27","19:27","20:27","22:27"],
-    weekend:["08:27","11:27","14:27","17:27","21:27"]}
-},
-
-"PKP Sulejówek Miłosna 01":{
-  "A1":{
-   color:"#1e88ff",
-   direction:"PKP Sulejówek Miłosna",
-   weekday:["06:00","07:00","08:00","09:00"], 
-   weekend:["08:00","10:00"]
+    weekday:[
+      "05:47","06:16","06:47","07:13","07:37",
+      "08:19","09:19","10:17","11:34",
+      "12:37","13:48","14:39","15:33",
+      "16:34","17:05","17:34","18:05",
+      "18:34","19:05","20:05","21:05"
+    ],
+    weekend:[] // BRAK KURSU W WEEKEND
   },
-  "P02":{
+
+  "P02": {
     color:"#e53935",
-    direction:"Okuniew-Rynek",
-    weekday:["06:30","07:30","08:30"], 
-    weekend:["09:30"]
+    direction:"Rynek (Stanisławów)",
+    weekday:[
+      "04:57","05:57","06:57","07:57",
+      "09:27","11:27","13:27","14:57",
+      "15:57","16:57","17:57","18:57",
+      "19:57","21:27"
+    ],
+    weekend:[
+      "05:57","09:57","12:57","15:57",
+      "18:57"
+    ]
   },
-  "P03":{
+
+  "P03": {
     color:"#00c853",
-    direction:"Okuniew-Rynek",
-    weekday:["06:35","07:35","08:35"],
-    weekend:["09:35"]
-  },
-  };
+    direction:"Michałów-Pętla",
+    weekday:[
+      "04:27","05:27","06:27","07:27",
+      "08:27","10:27","12:27","14:27",
+      "15:27","16:27","17:27","18:27",
+      "19:27","20:27","22:27"
+    ],
+    weekend:[
+      "08:27","11:27","14:27","17:27",
+      "21:27"
+     ]
+  }, 
+};
 
+  
+const coursesBox = document.getElementById("courses");
 
-let currentStop="Łukasińskiego 01";
-
-/* GENERUJ MENU PRZYSTANKÓW */
-function renderStops(){
-  sideMenu.innerHTML="";
-  for(const name in stops){
-    const div=document.createElement("div");
-    div.className="stop-item";
-    div.textContent=name;
-    div.onclick=()=>{
-      currentStop=name;
-      stopName.textContent=name;
-      toggleMenu();
-      renderCourses();
-    };
-    sideMenu.appendChild(div);
-  }
-}
-
-renderStops();
-
-/* CZAS */
 function isWeekend(){
-  const d=new Date().getDay();
-  return d===0||d===6;
+  const day = new Date().getDay();
+  return day === 0 || day === 6; // niedziela=0, sobota=6
 }
 
 function minutesLeft(time){
@@ -195,39 +141,54 @@ function minutesLeft(time){
   return Math.round((target-now)/60000);
 }
 
-/* RENDER ODJAZDÓW */
 function renderCourses(){
   coursesBox.innerHTML="";
-  const lines=stops[currentStop];
-  let all=[];
-  const weekend=isWeekend();
+  let allDepartures=[];
 
-  for(const lineNumber in lines){
-    const line=lines[lineNumber];
-    const schedule=weekend?line.weekend:line.weekday;
+  const weekend = isWeekend();
+
+  Object.keys(lines).forEach(lineNumber=>{
+    const line = lines[lineNumber];
+
+    const schedule = weekend ? line.weekend : line.weekday;
 
     schedule.forEach(start=>{
       const diff=minutesLeft(start);
+
       if(diff>=-1){
-        all.push({line:lineNumber,color:line.color,direction:line.direction,time:start,diff});
+        allDepartures.push({
+          line:lineNumber,
+          color:line.color,
+          direction:line.direction,
+          time:start,
+          diff:diff
+        });
       }
     });
-  }
+  });
 
-  all.sort((a,b)=>a.diff-b.diff);
+  allDepartures.sort((a,b)=>a.diff-b.diff);
 
-  all.forEach(dep=>{
+  allDepartures.forEach(dep=>{
     coursesBox.innerHTML+=`
-    <div class="course">
-      <div class="left">
-        <div class="line" style="background:${dep.color}">${dep.line}</div>
-        <div class="info">→ <b>${dep.direction}</b></div>
+      <div class="course">
+        <div class="left">
+          <div class="line" style="background:${dep.color}">
+            ${dep.line}
+          </div>
+          <div class="info">
+            -> <b>${dep.direction}</b>
+          </div>
+        </div>
+
+        <div class="time-box">
+          <div class="start-time">${dep.time}</div>
+          <div class="countdown">
+            ${dep.diff>0?`za ${dep.diff} min`:"teraz"}
+          </div>
+        </div>
       </div>
-      <div class="time-box">
-        <div class="start-time">${dep.time}</div>
-        <div class="countdown">${dep.diff>0?`za ${dep.diff} min`:"teraz"}</div>
-      </div>
-    </div>`;
+    `;
   });
 }
 
@@ -235,7 +196,7 @@ renderCourses();
 setInterval(renderCourses,30000);
 
 </script>
+
 </body>
 </html>
-
 
