@@ -13,7 +13,7 @@ body{
   font-family:system-ui;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .header{
   padding:18px;
   font-size:20px;
@@ -25,17 +25,14 @@ body{
   gap:12px;
 }
 
-.menu-btn{
-  font-size:24px;
-  cursor:pointer;
-}
+.menu-btn{ font-size:24px; cursor:pointer; }
 
-/* ===== MENU ===== */
+/* MENU */
 .side-menu{
   position:fixed;
   top:0;
   left:-240px;
-  width:210px;
+  width:220px;
   height:100%;
   background:#0b111a;
   box-shadow:2px 0 12px #000;
@@ -46,13 +43,11 @@ body{
 
 .side-menu.open{ left:0; }
 
-.menu-item{
-  padding:15px 20px;
+.stop-item{
+  padding:14px 20px;
   cursor:pointer;
-  font-weight:600;
 }
-
-.menu-item:hover{ background:#111c2a; }
+.stop-item:hover{ background:#111c2a; }
 
 .overlay{
   position:fixed;
@@ -61,32 +56,9 @@ body{
   display:none;
   z-index:900;
 }
-
 .overlay.show{ display:block; }
 
-/* ===== WYBÓR LINII ===== */
-#lineSelector{
-  display:none;
-  gap:10px;
-  padding:14px;
-  flex-wrap:wrap;
-}
-
-.line-tab{
-  padding:10px 20px;
-  border-radius:999px;
-  font-weight:700;
-  cursor:pointer;
-  opacity:.35;
-  transition:.2s;
-}
-
-.line-tab.active{
-  opacity:1;
-  transform:scale(1.05);
-}
-
-/* ===== ODJAZDY ===== */
+/* ODJAZDY */
 .course{
   background:#050b14;
   margin:12px;
@@ -98,11 +70,7 @@ body{
   box-shadow:0 0 12px #000;
 }
 
-.left{
-  display:flex;
-  gap:14px;
-  align-items:center;
-}
+.left{ display:flex; gap:14px; align-items:center; }
 
 .line{
   padding:10px 14px;
@@ -126,16 +94,12 @@ body{
 
 <div class="header">
   <span class="menu-btn" onclick="toggleMenu()">☰</span>
-  Przystanek: Łukasińskiego 01
+  <span id="stopName">Łukasińskiego 01</span>
 </div>
 
-<div class="side-menu" id="sideMenu">
-  <div class="menu-item" onclick="openSchedules()">Rozkłady</div>
-</div>
-
+<div class="side-menu" id="sideMenu"></div>
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<div id="lineSelector"></div>
 <div id="courses"></div>
 
 <script>
@@ -143,72 +107,72 @@ body{
 /* ===== MENU ===== */
 const sideMenu=document.getElementById("sideMenu");
 const overlay=document.getElementById("overlay");
-const lineSelector=document.getElementById("lineSelector");
+const stopName=document.getElementById("stopName");
 
 function toggleMenu(){
   sideMenu.classList.toggle("open");
   overlay.classList.toggle("show");
 }
 
-function openSchedules(){
-  toggleMenu();
-  lineSelector.style.display="flex";
-  renderLineSelector();
-  renderCourses();
-}
+/* ===== PRZYSTANKI I ROZKŁADY ===== */
+const stops={
+"Łukasińskiego 01":{
+  "A1":{color:"#1e88ff",
+        direction:"PKP Sulejówek Miłosna",
+    weekday:["05:47","06:16","06:47","07:13",
+             "07:37","08:19","09:19","10:17","11:34","12:37",
+             "13:48","14:39","15:33","16:34","17:05","17:34","18:05","18:34","19:05","20:05","21:05"],
+    weekend:[]},
+  "P02":{color:"#e53935",
+         direction:"Rynek (Stanisławów)",
+    weekday:["04:57","05:57",
+             "06:57","07:57","09:27","11:27","13:27","14:57","15:57","16:57","17:57","18:57","19:57","21:27"],
+    weekend:["05:57","09:57","12:57","15:57","18:57"]},
+  "P03":{color:"#00c853",
+         direction:"Michałów-Pętla",
+    weekday:["04:27","05:27","06:27","07:27","08:27","10:27",
+             "12:27","14:27","15:27","16:27","17:27","18:27","19:27","20:27","22:27"],
+    weekend:["08:27","11:27","14:27","17:27","21:27"]}
+},
 
-/* ===== ROZKŁADY ===== */
-const lines = {
-  "A1": {
-    color:"#1e88ff",
-    direction:"PKP Sulejówek Miłosna",
-    weekday:["05:47","06:16","06:47","07:13","07:37","08:19","09:19","10:17","11:34","12:37","13:48","14:39","15:33","16:34","17:05","17:34","18:05","18:34","19:05","20:05","21:05"],
-    weekend:[]
-  },
-  "P02": {
-    color:"#e53935",
-    direction:"Rynek (Stanisławów)",
-    weekday:["04:57","05:57","06:57","07:57","09:27","11:27","13:27","14:57","15:57","16:57","17:57","18:57","19:57","21:27"],
-    weekend:["05:57","09:57","12:57","15:57","18:57"]
-  },
-  "P03": {
-    color:"#00c853",
-    direction:"Michałów-Pętla",
-    weekday:["04:27","05:27","06:27","07:27","08:27","10:27","12:27","14:27","15:27","16:27","17:27","18:27","19:27","20:27","22:27"],
-    weekend:["08:27","11:27","14:27","17:27","21:27"]
-  }
+"PKP Sulejówek Miłosna 01":{
+  "A1":{color:"#1e88ff",
+        direction:"PKP Sulejówek Miłosna",
+    weekday:["06:00","07:00","08:00","09:00"], 
+      weekend:["08:00","10:00"]},
+  "P02":{color:"#e53935",
+         direction:"Okuniew-Rynek",
+    weekday:["06:30","07:30","08:30"], 
+         weekend:["09:30"]}
 };
 
-const coursesBox=document.getElementById("courses");
-let activeLines=new Set(Object.keys(lines));
+let currentStop="Łukasińskiego 01";
 
-function renderLineSelector(){
-  lineSelector.innerHTML="";
-  Object.keys(lines).forEach(name=>{
-    const l=lines[name];
-    const btn=document.createElement("div");
-    btn.className="line-tab active";
-    btn.style.background=l.color;
-    btn.textContent=name;
-
-    btn.onclick=()=>{
-      if(activeLines.has(name)){
-        activeLines.delete(name);
-        btn.classList.remove("active");
-      }else{
-        activeLines.add(name);
-        btn.classList.add("active");
-      }
+/* ===== GENERUJ MENU ===== */
+function renderStops(){
+  sideMenu.innerHTML="";
+  Object.keys(stops).forEach(name=>{
+    const div=document.createElement("div");
+    div.className="stop-item";
+    div.textContent=name;
+    div.onclick=()=>{
+      currentStop=name;
+      stopName.textContent=name;
+      toggleMenu();
       renderCourses();
     };
-
-    lineSelector.appendChild(btn);
+    sideMenu.appendChild(div);
   });
 }
 
+renderStops();
+
+/* ===== ODJAZDY ===== */
+const coursesBox=document.getElementById("courses");
+
 function isWeekend(){
-  const day=new Date().getDay();
-  return day===0||day===6;
+  const d=new Date().getDay();
+  return d===0||d===6;
 }
 
 function minutesLeft(time){
@@ -221,13 +185,11 @@ function minutesLeft(time){
 
 function renderCourses(){
   coursesBox.innerHTML="";
+  const lines=stops[currentStop];
   let all=[];
-
   const weekend=isWeekend();
 
   Object.keys(lines).forEach(lineNumber=>{
-    if(!activeLines.has(lineNumber)) return;
-
     const line=lines[lineNumber];
     const schedule=weekend?line.weekend:line.weekday;
 
@@ -262,4 +224,5 @@ setInterval(renderCourses,30000);
 </script>
 </body>
 </html>
+
 
