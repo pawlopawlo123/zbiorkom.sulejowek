@@ -3,66 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tablica odjazdów</title>
+<title>Odjazdy</title>
 
 <style>
 body{
   margin:0;
-  background:#000;
-  color:#ffcc00;
-  font-family:Arial, Helvetica, sans-serif;
+  background:#0f1720;
+  color:white;
+  font-family:system-ui;
 }
 
 .header{
-  background:#111;
-  padding:20px;
+  padding:18px;
   text-align:center;
-  border-bottom:3px solid #ffcc00;
+  font-size:20px;
+  font-weight:600;
+  background:#0b111a;
+  box-shadow:0 2px 10px #000;
 }
 
-.clock{
-  font-size:40px;
-  font-weight:700;
-}
-
-.stop-select{
+select{
   margin-top:10px;
-  font-size:18px;
   padding:6px;
+  font-size:15px;
+  border-radius:8px;
 }
 
 .course{
+  background:#050b14;
+  margin:12px;
+  border-radius:14px;
+  padding:14px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  padding:18px;
-  border-bottom:1px solid #333;
+  justify-content:space-between;
+  box-shadow:0 0 12px #000;
 }
 
 .left{
   display:flex;
+  gap:14px;
   align-items:center;
-  gap:20px;
 }
 
 .line{
-  font-size:30px;
-  font-weight:800;
-  min-width:80px;
-}
-
-.direction{
-  font-size:20px;
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:700;
+  min-width:55px;
+  text-align:center;
   color:white;
 }
 
-.minutes{
-  font-size:36px;
-  font-weight:800;
+.info{
+  font-size:14px;
 }
 
-.now{
-  color:#00ff66;
+.info b{
+  color:#8fb7ff
+}
+
+.time-box{
+  text-align:right;
+  font-weight:600;
+}
+
+.start-time{
+  font-size:20px;
+}
+
+.countdown{
+  font-size:13px;
+  color:#6faeff;
 }
 </style>
 </head>
@@ -70,21 +82,21 @@ body{
 <body>
 
 <div class="header">
-  <div class="clock" id="clock"></div>
-  <select id="stopSelect" class="stop-select"></select>
+  <div>Wybierz przystanek:</div>
+  <select id="stopSelect"></select>
 </div>
 
 <div id="courses"></div>
 
 <script>
 
-// =========================
-// DANE PRZYSTANKÓW
-// =========================
+// ===========================
+// PRZYSTANKI
+// ===========================
 
 const stops = {
-
-  "Łukasinskiego 01": {
+  
+   "Łukasinskiego 01": {
     name:"Łukasińskiego 01",
     lines:{
       "A1":{
@@ -222,38 +234,32 @@ const stops = {
       }
 
 };
-        
-      
-    
-            
-            
-
-
-
-// =========================
+                 
+// ===========================
 // LOGIKA
-// =========================
+// ===========================
 
 const stopSelect = document.getElementById("stopSelect");
 const coursesBox = document.getElementById("courses");
+
 let currentStopId = Object.keys(stops)[0];
 
-// wypełnienie selecta
+// wypełniamy select
 Object.keys(stops).forEach(id=>{
   const option = document.createElement("option");
-  option.value=id;
-  option.textContent=stops[id].name;
+  option.value = id;
+  option.textContent = stops[id].name;
   stopSelect.appendChild(option);
 });
 
 stopSelect.addEventListener("change",()=>{
-  currentStopId=stopSelect.value;
+  currentStopId = stopSelect.value;
   renderCourses();
 });
 
 function isWeekend(){
-  const d=new Date().getDay();
-  return d===0 || d===6;
+  const day = new Date().getDay();
+  return day === 0 || day === 6;
 }
 
 function minutesLeft(time){
@@ -266,60 +272,56 @@ function minutesLeft(time){
 
 function renderCourses(){
   coursesBox.innerHTML="";
-  const stop=stops[currentStopId];
-  let departures=[];
-  const weekend=isWeekend();
+  let allDepartures=[];
+  const weekend = isWeekend();
+  const lines = stops[currentStopId].lines;
 
-  Object.keys(stop.lines).forEach(lineNumber=>{
-    const line=stop.lines[lineNumber];
-    const schedule=weekend?line.weekend:line.weekday;
+  Object.keys(lines).forEach(lineNumber=>{
+    const line = lines[lineNumber];
+    const schedule = weekend ? line.weekend : line.weekday;
 
-    schedule.forEach(time=>{
-      const diff=minutesLeft(time);
+    schedule.forEach(start=>{
+      const diff=minutesLeft(start);
+
       if(diff>=-1){
-        departures.push({
+        allDepartures.push({
           line:lineNumber,
-          direction:line.direction,
           color:line.color,
+          direction:line.direction,
+          time:start,
           diff:diff
         });
       }
     });
   });
 
-  departures.sort((a,b)=>a.diff-b.diff);
+  allDepartures.sort((a,b)=>a.diff-b.diff);
 
-  departures.slice(0,6).forEach(dep=>{
+  allDepartures.forEach(dep=>{
     coursesBox.innerHTML+=`
       <div class="course">
         <div class="left">
-          <div class="line" style="color:${dep.color}">
+          <div class="line" style="background:${dep.color}">
             ${dep.line}
           </div>
-          <div class="direction">
-            ${dep.direction}
+          <div class="info">
+            -> <b>${dep.direction}</b>
           </div>
         </div>
-        <div class="minutes ${dep.diff<=0?"now":""}">
-          ${dep.diff>0?dep.diff+" min":"ODJAZD"}
+
+        <div class="time-box">
+          <div class="start-time">${dep.time}</div>
+          <div class="countdown">
+            ${dep.diff>0?`za ${dep.diff} min`:"teraz"}
+          </div>
         </div>
       </div>
     `;
   });
 }
 
-// zegar
-function updateClock(){
-  const now=new Date();
-  document.getElementById("clock").innerText=
-    now.toLocaleTimeString("pl-PL");
-}
-
-setInterval(updateClock,1000);
-setInterval(renderCourses,30000);
-
-updateClock();
 renderCourses();
+setInterval(renderCourses,30000);
 
 </script>
 
