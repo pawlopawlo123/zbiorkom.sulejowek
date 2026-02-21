@@ -13,22 +13,59 @@ body{
   font-family:system-ui;
 }
 
-.header{
-  padding:18px;
-  text-align:center;
-  font-size:20px;
-  font-weight:600;
+/* ===== GÓRNY PASEK ===== */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:16px;
   background:#0b111a;
   box-shadow:0 2px 10px #000;
+  font-size:18px;
+  font-weight:600;
 }
 
-select{
-  margin-top:10px;
-  padding:6px;
-  font-size:15px;
+.menu-btn{
+  font-size:24px;
+  cursor:pointer;
+}
+
+/* ===== MENU BOCZNE ===== */
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:250px;
+  height:100%;
+  background:#111b28;
+  box-shadow:2px 0 15px #000;
+  padding:20px;
+  transition:0.3s;
+  z-index:1000;
+}
+
+.side-menu.open{
+  left:0;
+}
+
+.menu-header{
+  font-size:18px;
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+.menu-item{
+  padding:10px;
   border-radius:8px;
+  cursor:pointer;
+  margin-bottom:6px;
 }
 
+.menu-item:hover{
+  background:#1c2b3d;
+}
+
+/* ===== KARTY ODJAZDÓW ===== */
 .course{
   background:#050b14;
   margin:12px;
@@ -81,180 +118,55 @@ select{
 
 <body>
 
-<div class="header">
-  <div>Wybierz przystanek:</div>
-  <select id="stopSelect"></select>
+<div class="topbar">
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <div id="stopTitle"></div>
+</div>
+
+<div class="side-menu" id="sideMenu">
+  <div class="menu-header">Wybierz przystanek</div>
+  <div id="menuStops"></div>
 </div>
 
 <div id="courses"></div>
 
 <script>
 
-// ===========================
-// PRZYSTANKI
-// ===========================
-
-const stops = {
+/* ===========================
+   PRZYSTANKI
+=========================== */
+const stop: {
   
-   "Łukasinskiego 01": {
-    name:"Łukasińskiego01",
-    lines:{
-      "A1":{
-        color:"#1e88ff",
-        direction:"PKP Sulejówek Miłosna",
-        weekday:["05:47","06:16","06:47","07:13","07:37",
-                "08:19","09:19","10:17","11:34",
-                "12:37","13:48","14:39","15:33",
-                "16:34","17:05","17:34","18:05",
-                 "18:34","19:05","20:05","21:05"],
-        weekend:[]
-      },
-    
-      "P02":{
-        color:"#e53935",
-        direction:"Rynek (Stanisławów)",
-        weekday:["04:57","05:57","06:57","07:57",
-                 "09:27","11:27","13:27","14:57",
-                 "15:57","16:57","17:57","18:57",
-                 "19:57","21:27"],
-        weekend:["05:57","09:57","12:57","15:57",
-                "18:57"]
-      },
-    
-      "P03":{
-        color:"#00c853",
-        direction:"Michałów-Pętla",
-        weekday:["04:27","05:27","06:27","07:27",
-                 "08:27","10:27","12:27","14:27",
-                 "15:27","16:27","17:27","18:27",
-                 "19:27","20:27","22:27"],
-        weekend:["08:27","11:27","14:27","17:27",
-                 "21:27"]
-      }
-    }
-  },
-    
 
-  "Michałów-Pętla 01":{
-    name:"Michałów-Pętla 01",
-    lines:{
-      "P03":{
-        color:"#00c853",
-        direction:"Okuniew-Rynek",
-        weekday:["05:08","06:08","07:08","08:08",
-                 "09:08","11:08","13:08","15:08",
-                 "16:08","17:08","18:08","19:08",
-                 "20:08","21:08","23:08"],
-        weekend:["05:08","09:08","12:08","15:08",
-                 "18:08","22:08"]
-      }
-    }
-  },
-      
-  "Rynek (Stanisławów) 01":{
-    name:"Rynek (Stanisławów) 01",
-    lines:{
-      "P02":{
-        color:"#e53935",
-          direction:"Okuniew-Rynek",
-          weekday:["05:35","06:35","07:35","08:35",
-                   "10:05","12:05","14:05","15:35",
-                   "16:35","17:35","18:35","19:35",
-                   "20:35","22:05"],
-          weekend:["07:35","10:35","13:35","16:35",
-                   "20:35"]
-      }
-    }
-  },
-    
-  "PKP Sulejówek Miłosna 01":{
-    name:"PKP Sulejówek Miłosna 01",
-    lines:{
-      "A1":{
-        color:"#1e88ff",
-          direction:"PKP Sulejówek Miłosna",
-          weekday:["05:38","06:07","06:38","07:04",
-                   "07:28","08:10","08:34","09:10",
-                   "10:08","11:25","12:28","13:39",
-                   "14:30","15:24","16:25","16:56",
-                   "17:25","17:56","18:25","18:56",
-                   "19:56","20:56"],
-          weekend:[]
-      },
-  
-      "P02":{
-        color:"#e53935",
-        direction:"Okuniew-Rynek",
-        weekday:["06:05","07:05","08:05","09:05",
-                 "10:35","12:35","14:35","16:05",
-                 "17:05","18:05","19:05","20:05",
-                 "21:05","22:35"],
-        weekend:["08:05","11:05","14:05","17:05",
-                 "21:05"]
-      },
-  
-      "P03":{
-        color:"#00c853",
-        direction:"Okuniew-Rynek",
-        weekday:["05:35","06:35","07:35","08:35",
-                 "09:35","11:35","13:35","15:35",
-                 "16:35","17:35","18:35","19:35",
-                 "20:35","21:35","23:35"],
-        weekend:["05:35","09:35","12:35","15:35",
-                 "18:35","22:35"]
-      }
-    }
-  },
-    
-      "Okuniew-Rynek 01":{
-       name:"Okuniew-Rynek 01",
-        lines:{
-          "P02":{
-            color:"#e53935",
-            direction:"Rynek (Stanisławów)",
-              weekday:["04:52","05:52","06:52","07:52",
-                       "09:22","11:22","13:22","14:52",
-                       "15:52","16:52","17:52","18:52",
-                       "19:52","21:22"],
-             weekend:["05:52","09:52","12:52","15:52",
-                      "18:52"]
-          },
-        
-          "P03":{
-            color:"#00c853",
-            direction:"Michałów-Pętla",
-            weekday:["04:22","05:22","06:22","07:22",
-                     "08:22","10:22","12:22","14:22",
-                     "15:22","16:22","17:22","18:22",
-                     "19:22","20:22","22:22"],
-            weekend:["08:22","11:22","14:22","17:22",
-                     "21:22"]
-          }
-        }
-      }
 
-};
-                 
-// ===========================
-// LOGIKA
-// ===========================
+/* ===========================
+   LOGIKA
+=========================== */
 
-const stopSelect = document.getElementById("stopSelect");
 const coursesBox = document.getElementById("courses");
+const sideMenu = document.getElementById("sideMenu");
+const menuStops = document.getElementById("menuStops");
+const stopTitle = document.getElementById("stopTitle");
 
 let currentStopId = Object.keys(stops)[0];
 
-// wypełniamy select
-Object.keys(stops).forEach(id=>{
-  const option = document.createElement("option");
-  option.value = id;
-  option.textContent = stops[id].name;
-  stopSelect.appendChild(option);
-});
+function toggleMenu(){
+  sideMenu.classList.toggle("open");
+}
 
-stopSelect.addEventListener("change",()=>{
-  currentStopId = stopSelect.value;
-  renderCourses();
+Object.keys(stops).forEach(id=>{
+  const div = document.createElement("div");
+  div.className="menu-item";
+  div.textContent = stops[id].name;
+
+  div.onclick = ()=>{
+    currentStopId = id;
+    stopTitle.textContent = "Przystanek: " + stops[id].name;
+    toggleMenu();
+    renderCourses();
+  };
+
+  menuStops.appendChild(div);
 });
 
 function isWeekend(){
@@ -305,7 +217,7 @@ function renderCourses(){
             ${dep.line}
           </div>
           <div class="info">
-            -> <b>${dep.direction}</b>
+            → <b>${dep.direction}</b>
           </div>
         </div>
 
@@ -319,6 +231,8 @@ function renderCourses(){
     `;
   });
 }
+
+stopTitle.textContent = "Przystanek: " + stops[currentStopId].name;
 
 renderCourses();
 setInterval(renderCourses,30000);
