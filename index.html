@@ -466,7 +466,10 @@ function renderCourses(){
     coursesBox.innerHTML+=`
     <div class="course">
       <div class="left">
-        <div class="line" style="background:${dep.color}">${dep.line}</div>
+        <div class="line" style="background:${line.color}"> 
+        <span class="bus-icon">🚌</span>
+       ${dep.line}
+        </div>
         <div class="info">→ <b>${dep.direction}</b></div>
       </div>
       <div class="time-box">
