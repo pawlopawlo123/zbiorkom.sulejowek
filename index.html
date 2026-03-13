@@ -136,6 +136,25 @@ body{
   #courses{
   margin-top:80px;
     }
+
+.line {
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:700;
+  min-width:55px;
+  text-align:center;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:4px; /* odstęp między ikoną a numerem */
+}
+
+.line img {
+  height:20px;
+  width:20px;
+  border-radius:4px; /* lekko zaokrąglona ikona */
+  object-fit:cover;
+}
 </style>
 </head>
 
@@ -172,6 +191,7 @@ weekday:["05:47","06:16","06:47","07:13",
          "18:05","18:34","19:05","20:05",
          "21:05"],
 weekend:[]
+icon: "bus_a1.png"
 },
   
 "P02":{
@@ -183,6 +203,7 @@ weekday:["04:57","05:57","06:57","07:57",
          "19:57","21:27"],
 weekend:["05:57","09:57","12:57","15:57",
          "18:57"]
+icon: "bus_p02.png"
 },
   
 "P03":{
@@ -194,6 +215,7 @@ weekday:["04:27","05:27","06:27","07:27",
          "19:27","20:27","22:27"],
 weekend:["08:27","11:27","14:27","17:27",
          "21:27"]
+icon: "bus_p02.png"
   }
  }
 },
@@ -466,8 +488,10 @@ function renderCourses(){
     coursesBox.innerHTML+=`
     <div class="course">
       <div class="left">
-      <div class="line" 
-      style="background:${dep.color}">${dep.line}</div>
+      <div class="line" style="background:${dep.color}">
+      <img src="${dep.icon}" alt="${dep.line}">
+      ${dep.line}
+      </div>
         <div class="info">→ <b>${dep.direction}</b></div>
         </div>
       <div class="time-box">
