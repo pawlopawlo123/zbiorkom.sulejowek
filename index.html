@@ -190,7 +190,7 @@ weekday:["05:47","06:16","06:47","07:13",
          "15:49","16:34","17:05","17:34",
          "18:05","18:34","19:05","20:05",
          "21:05"],
-weekend:[]
+weekend:[],
 icon: "bus_a1.png"
 },
   
@@ -202,7 +202,7 @@ weekday:["04:57","05:57","06:57","07:57",
          "15:57","16:57","17:57","18:57",
          "19:57","21:27"],
 weekend:["05:57","09:57","12:57","15:57",
-         "18:57"]
+         "18:57"],
 icon: "bus_p02.png"
 },
   
@@ -214,7 +214,7 @@ weekday:["04:27","05:27","06:27","07:27",
          "15:27","16:27","17:27","18:27",
          "19:27","20:27","22:27"],
 weekend:["08:27","11:27","14:27","17:27",
-         "21:27"]
+         "21:27"],
 icon: "bus_p02.png"
   }
  }
@@ -488,7 +488,8 @@ function renderCourses(){
   coursesBox.innerHTML += `
   <div class="course">
     <div class="left">
-      <svg class="bus-icon" viewBox="0 0 24 24">
+      <div class="line" style="background:${dep.color}">
+       <svg class="bus-icon" viewBox="0 0 24 24">
         <g>
           <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 
           .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 
@@ -496,7 +497,8 @@ function renderCourses(){
           .83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>
         </g>
       </svg>
-      <div class="line" style="background:${dep.color}">${dep.line}</div>
+      ${dep.line}
+      </div>
       <div class="info">→ <b>${dep.direction}</b></div>
     </div>
     <div class="time-box">
