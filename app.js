@@ -237,19 +237,6 @@ function renderStop(stop,times){
   results.innerHTML+=html
 }
 
-  let html=`<div class="card"><div class="stop">${stop}</div>`
-
-  upcoming.forEach(x=>{
-    const diff=x.m-nowMin
-    html+=`<div class="time ${diff<10?'soon':''}">
-            ${x.t} • za ${diff} min
-          </div>`
-  })
-
-  html+=`</div>`
-  results.innerHTML+=html
-}
-
 search.addEventListener("input",refresh)
 setInterval(refresh,60000)
 refresh()
