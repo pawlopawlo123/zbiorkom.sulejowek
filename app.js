@@ -209,11 +209,27 @@ function renderStop(stop,times){
   const nowMin=now.getHours()*60+now.getMinutes()
 
   const upcoming=times
-    .map(t=>({t,m:toMin(t)}))
-    .filter(x=>x.m>=nowMin)
-    .slice(0,5)
+  .map(t=>({t,m:toMin(t)}))
+  .filter(x=>x.m>=nowMin)
+  .slice(0,5)
 
-  if(!upcoming.length) return
+let html=`<div class="card"><div class="stop">${stop}</div>`
+
+if(!upcoming.length){
+  html+=`<div class="no-departures">
+          W dniu dzisiejszym nie ma już planowanych odjazdów
+        </div>`
+}else{
+  upcoming.forEach(x=>{
+    const diff=x.m-nowMin
+    html+=`<div class="time ${diff<10?'soon':''}">
+            ${x.t} • za ${diff} min
+          </div>`
+  })
+}
+
+html+=`</div>`
+results.innerHTML+=html
 
   let html=`<div class="card"><div class="stop">${stop}</div>`
 
