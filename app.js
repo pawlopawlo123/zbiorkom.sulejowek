@@ -1,3 +1,18 @@
+const busInfo = {
+  "P02": {
+    image: "bus_p02.jpg",
+    brand: "Mercedes-Benz 519 CDI / Żak City",
+    number: "B001",
+    operator: "Usługi Transportowe Wisińska Zofia"
+  },
+  "P03": {
+    image: "bus_p03.jpg",
+    brand: "Mercedes-Benz 519 CDI / Żak City",
+    number: "B001",
+    operator: "Usługi Transportowe Wisińska Zofia"
+  }
+}
+
 const stops = {
       "PKP Sulejówek Miłosna (01)":  ["05:38", "06:07", "06:38", "07:04", "07:28", "08:10", "08:34", "09:10"
                                     , "10:08", "11:25", "12:28", "13:39", "14:30", "15:24", "16:25", "16:56"
