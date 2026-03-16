@@ -1,3 +1,4 @@
+
 const busInfo = {
   "P02": {
     image: "bus_p02.jpg",
@@ -255,3 +256,23 @@ function renderStop(stop,times){
 search.addEventListener("input",refresh)
 setInterval(refresh,60000)
 refresh()
+
+function showBus(line){
+
+  const bus = busInfo[line]
+  if(!bus) return
+
+  document.getElementById("busPhoto").src = bus.image
+
+  document.getElementById("busDetails").innerHTML = `
+  <b>Marka:</b> ${bus.brand}<br>
+  <b>Numer taborowy:</b> ${bus.number}<br>
+  <b>Przewoźnik:</b> ${bus.operator}
+  `
+
+  document.getElementById("busModal").style.display = "block"
+}
+
+function closeBus(){
+  document.getElementById("busModal").style.display = "none"
+}
