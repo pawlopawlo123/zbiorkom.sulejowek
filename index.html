@@ -530,8 +530,8 @@ weekend:["08:22","11:22","14:22","17:22",
    }
   },
 
-  "Moniuszki 02":{
-  name:"Moniuszki 02",
+  "Moniuszki 03":{
+  name:"Moniuszki 03",
   lines:{
   "A2":{
   color:"#405AA9",
@@ -643,6 +643,24 @@ setInterval(renderCourses,30000);
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
   }
+
+let lastVersion = null
+
+async function checkVersion(){
+
+  const res = await fetch(window.location.href, { cache: "no-store" })
+  const text = await res.text()
+
+  const version = text
+
+  if(lastVersion && version !== lastVersion){
+    showUpdateAvailable()
+  }
+
+  lastVersion = version
+}
+
+setInterval(checkVersion,10000)
 </script>
 
 <div id="busModal" class="modal">
