@@ -586,6 +586,14 @@ function isWeekend(){
   return day===0||day===6;
 }
 
+function showUpdateAvailable(){
+  document.getElementById("updateAvailable").classList.add("show")
+}
+
+function updateApp(){
+  location.reload(true)
+}
+
 function minutesLeft(time){
   const [h,m]=time.split(":").map(Number);
   const now=new Date();
