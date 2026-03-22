@@ -220,6 +220,10 @@ function refresh(){
     .forEach(([stop,times]) => renderStop(stop,times))
 }
 
+function gradient(color){
+  return `linear-gradient(90deg, ${color}, ${color}88)`
+}
+
 function renderStop(stop,times){
 
   const now=new Date()
@@ -230,32 +234,37 @@ function renderStop(stop,times){
     .filter(x=>x.m>=nowMin)
     .slice(0,5)
 
-  let html=`<div class="card"><div class="stop">${stop}</div>`
+  const line = stopToLine[stop] || "A1"
+  const data = lines[line]
 
-  if(upcoming.length===0){
+  if(upcoming.length===0) return
 
-    html+=`<div class="no-departures">
-      W dniu dzisiejszym nie ma już planowanych odjazdów
-    </div>`
+  upcoming.forEach(x=>{
+    const diff = x.m - nowMin
 
-  }else{
+    results.innerHTML += `
+    <div class="departure" style="background:${gradient(data.color)}">
 
-    upcoming.forEach(x=>{
-      const diff=x.m-nowMin
-      html+=`<div class="time ${diff<10?'soon':''}">
-        ${x.t} • za ${diff} min
-      </div>`
-    })
+      <div class="lineBox" style="background:${data.color}">
+        <div>🚌</div>
+        <span>${line}</span>
+      </div>
 
-  }
+      <div class="middle">
+        <div class="direction">${data.direction}</div>
+      </div>
 
-  html+=`</div>`
-  results.innerHTML+=html
+      <div class="right">
+        <div class="hour">${x.t}</div>
+        <div class="mins ${diff<=0?'now':''}">
+          ${diff<=0 ? "❯❯ Odjeżdża" : "za "+diff+" min"}
+        </div>
+      </div>
+
+    </div>
+    `
+  })
 }
-
-search.addEventListener("input",refresh)
-setInterval(refresh,60000)
-refresh()
 
 function showBus(line){
 
