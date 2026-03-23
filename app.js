@@ -246,15 +246,14 @@ function renderStop(stop,times){
     <div class="departure" style="background:${gradient(data.color)}">
 
       <div class="lineBox" style="background:${data.color}">
-
-  <svg class="busIcon" viewBox="0 0 24 24">
+  <svg viewBox="0 0 24 24" class="busIcon">
     <rect x="3" y="4" width="18" height="12" rx="3"></rect>
     <rect x="5" y="6" width="14" height="5" rx="1"></rect>
     <circle cx="7" cy="18" r="2"></circle>
     <circle cx="17" cy="18" r="2"></circle>
   </svg>
-
-  <span class="lineNumber">${line}</span>
+  ${line}
+</div>
 
 </div>
 
