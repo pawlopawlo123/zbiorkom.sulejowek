@@ -248,14 +248,14 @@ top:0;
 
   .side-menu{
   position:fixed;
-  top:0;
+  top:60px;                 /* 👈 wysokość topbara */
   left:-260px;
   width:260px;
-  height:100vh;
+  height:calc(100vh - 60px); /* 👈 żeby nie wychodziło poza ekran */
   background:#111b28;
   transition:0.3s;
   box-shadow:2px 0 15px #000;
-  z-index:300;
+  z-index:100;
 }
 
 .side-menu.open{
