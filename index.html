@@ -43,25 +43,14 @@ body{
   cursor:pointer;
 }
 
-.side-menu{
-  position:fixed;
-  top:0;
-  left:-260px;
-  width:260px;
-  height:100%;
-  background:#111b28;
-  padding-top:70px;
-  transition:0.3s;
-  box-shadow:2px 0 15px #000;
-  z-index:100;
-}
-
 .menu-title{
   padding:16px 18px;
   font-weight:700;
   font-size:16px;
   border-bottom:1px solid #1c2b3d;
   background:#0b111a;
+
+  flex-shrink:0;   /* 👈 żeby się nie scrollował */
 }
 
 .side-menu.open{
@@ -276,19 +265,19 @@ top:0;
   top:0;
   left:-260px;
   width:260px;
-  height:100%;
+  height:100vh;        /* 👈 ważne */
   background:#111b28;
-  padding-top:70px;
   transition:0.3s;
   box-shadow:2px 0 15px #000;
   z-index:100;
 
-  overflow-y: auto;   /* ✅ TO WŁĄCZA SCROLL */
+  display:flex;        /* 👈 NOWE */
+  flex-direction:column; /* 👈 NOWE */
 }
 
-.menu-list{
+menu-list{
   overflow-y:auto;
-  height:calc(100% - 60px);
+  flex:1;          /* 👈 NAJWAŻNIEJSZE */
 }
 </style>
 </head>
