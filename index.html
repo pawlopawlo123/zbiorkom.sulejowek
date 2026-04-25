@@ -248,14 +248,17 @@ top:0;
 
   .side-menu{
   position:fixed;
-  top:60px;                 /* 👈 wysokość topbara */
+  top:60px;
   left:-260px;
   width:260px;
-  height:calc(100vh - 60px); /* 👈 żeby nie wychodziło poza ekran */
+  height:calc(100vh - 60px);
   background:#111b28;
   transition:0.3s;
   box-shadow:2px 0 15px #000;
   z-index:100;
+
+  display:flex;              /* 🔥 KLUCZ */
+  flex-direction:column;     /* 🔥 KLUCZ */
 }
 
 .side-menu.open{
@@ -264,20 +267,19 @@ top:0;
 
 /* 🔥 KLUCZ */
 .menu-title{
-  position:sticky;
-  top:0;
   padding:16px 18px;
   font-weight:700;
   font-size:16px;
   border-bottom:1px solid #1c2b3d;
   background:#0b111a;
-  z-index:2;
+
+  flex-shrink:0;  /* 🔥 żeby nie znikał */
 }
 
 .menu-list{
-  height:100%;
+  flex:1;                   /* 🔥 ZAMIANA height:100% */
   overflow-y:auto;
-  -webkit-overflow-scrolling: touch; /* 🔥 iOS smooth scroll */
+  -webkit-overflow-scrolling: touch;
 }
 </style>
 </head>
