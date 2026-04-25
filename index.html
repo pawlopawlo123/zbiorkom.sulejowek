@@ -43,20 +43,6 @@ body{
   cursor:pointer;
 }
 
-.menu-title{
-  padding:16px 18px;
-  font-weight:700;
-  font-size:16px;
-  border-bottom:1px solid #1c2b3d;
-  background:#0b111a;
-
-  flex-shrink:0;   /* 👈 żeby się nie scrollował */
-}
-
-.side-menu.open{
-  left:0;
-}
-
 .menu-item{
   padding:14px 18px;
   cursor:pointer;
@@ -265,19 +251,33 @@ top:0;
   top:0;
   left:-260px;
   width:260px;
-  height:100vh;        /* 👈 ważne */
+  height:100vh;
   background:#111b28;
   transition:0.3s;
   box-shadow:2px 0 15px #000;
   z-index:100;
-
-  display:flex;        /* 👈 NOWE */
-  flex-direction:column; /* 👈 NOWE */
 }
 
-menu-list{
+.side-menu.open{
+  left:0;
+}
+
+/* 🔥 KLUCZ */
+.menu-title{
+  position:sticky;
+  top:0;
+  padding:16px 18px;
+  font-weight:700;
+  font-size:16px;
+  border-bottom:1px solid #1c2b3d;
+  background:#0b111a;
+  z-index:2;
+}
+
+.menu-list{
+  height:100%;
   overflow-y:auto;
-  flex:1;          /* 👈 NAJWAŻNIEJSZE */
+  -webkit-overflow-scrolling: touch; /* 🔥 iOS smooth scroll */
 }
 </style>
 </head>
