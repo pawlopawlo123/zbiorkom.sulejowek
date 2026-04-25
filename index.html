@@ -665,6 +665,7 @@ weekend:["08:22","11:22","14:22","17:22",
 
 const coursesBox = document.getElementById("courses");
 const sideMenu = document.getElementById("sideMenu");
+const menuList = document.getElementById("menuList");
 const stopTitle = document.getElementById("stopTitle");
 const overlay = document.getElementById("overlay");
 
@@ -693,7 +694,7 @@ Object.keys(stops).forEach(id=>{
     renderCourses();
   };
 
-  sideMenu.appendChild(div);
+  menuList.appendChild(div);
 });
 
 function isWeekend(){
