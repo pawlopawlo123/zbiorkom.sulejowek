@@ -742,9 +742,33 @@ Object.keys(stops).forEach(id=>{
   menuList.appendChild(div);
 });
 
+function isHoliday(){
+  const today = new Date();
+  const y = today.getFullYear();
+
+  const d = String(today.getDate()).padStart(2,"0");
+  const m = String(today.getMonth()+1).padStart(2,"0");
+
+  const date = `${d}.${m}`;
+
+  const holidays = [
+    "01.01", // Nowy Rok
+    "06.01", // Trzech Króli
+    "01.05", // Święto Pracy
+    "03.05", // Konstytucji 3 Maja
+    "15.08", // Wniebowzięcie
+    "01.11", // Wszystkich Świętych
+    "11.11", // Niepodległość
+    "25.12", // Boże Narodzenie
+    "26.12"  // Boże Narodzenie
+  ];
+
+  return holidays.includes(date);
+}
+
 function isWeekend(){
-  const day=new Date().getDay();
-  return day===0||day===6;
+  const day = new Date().getDay();
+  return day===0 || day===6 || isHoliday();
 }
 
 function showUpdateAvailable(){
@@ -769,6 +793,10 @@ function renderCourses(){
   let all=[];
 
   Object.keys(stops[currentStopId].lines).forEach(lineNumber=>{
+
+  if(isHoliday() && ["A1","A2","W3"].includes(lineNumber)){
+    return;
+  }
     const line=stops[currentStopId].lines[lineNumber];
     const schedule=weekend?line.weekend:line.weekday;
 
