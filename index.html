@@ -828,6 +828,14 @@ function renderCourses(){
   });
 
   all.sort((a,b)=>a.diff-b.diff);
+  if(all.length === 0){
+  coursesBox.innerHTML = `
+    <div class="no-departures-center">
+      Brak nadchodzących odjazdów
+    </div>
+  `;
+  return;
+  }
 
  all.forEach(dep=>{
     coursesBox.innerHTML+=`
