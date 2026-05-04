@@ -845,37 +845,65 @@ function renderCourses(){
   });
 
   all.sort((a,b)=>a.diff-b.diff);
-  if(all.length === 0){
-  coursesBox.style.overflowY = "hidden";
-  
-  coursesBox.innerHTML = `
-    <div class="no-departures-center">
-      Brak nadchodzących odjazdów
-    </div>
-  `;
-  return;
-}
+  function renderCourses(){
+  coursesBox.innerHTML="";
+  coursesBox.classList.remove("has-departures");
 
-coursesBox.style.overflowY = "auto";
+  const weekend=isWeekend();
+  let all=[];
 
- all.forEach(dep=>{
+  Object.keys(stops[currentStopId].lines).forEach(lineNumber=>{
+    const line=stops[currentStopId].lines[lineNumber];
+    const schedule=weekend ? line.weekend : line.weekday;
+
+    schedule.forEach(start=>{
+      const diff=minutesLeft(start);
+
+      if(diff>=-1){
+        all.push({
+          line:lineNumber,
+          color:line.color,
+          direction:line.direction,
+          time:start,
+          diff
+        });
+      }
+    });
+  });
+
+  all.sort((a,b)=>a.diff-b.diff);
+
+  if(all.length===0){
+    coursesBox.innerHTML=`
+      <div class="no-rides">
+        Brak nadchodzących odjazdów
+      </div>
+    `;
+    return;
+  }
+
+  coursesBox.classList.add("has-departures");
+
+  all.forEach(dep=>{
     coursesBox.innerHTML+=`
-    <div class="course">
-      <div class="left">
-      <div class="line" style="background:${dep.color}">
-  <img src="bus.svg" class="bus-icon">
-  <span>${dep.line}</span>
-</div>
-        <div class="info">→ <b>${dep.direction}</b></div>
-      </div>
-      <div class="time-box">
-        <div class="start-time">${dep.time}</div>
-        <div class="countdown">${dep.diff>0?`za ${dep.diff} min`:"teraz"}</div>
-      </div>
-    </div>`;
-});
+      <div class="course">
+        <div class="left">
+          <div class="line glow" style="background:${dep.color}">
+            🚌 ${dep.line}
+          </div>
+          <div class="info">→ <b>${dep.direction}</b></div>
+        </div>
 
-}
+        <div class="time-box">
+          <div class="start-time">${dep.time}</div>
+          <div class="countdown">
+            ${dep.diff>0 ? `za ${dep.diff} min` : "teraz"}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  }
 
 stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
 renderCourses();
