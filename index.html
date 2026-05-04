@@ -879,6 +879,9 @@ function renderCourses(){
   all.sort((a,b)=>a.diff-b.diff);
   
   if(all.length === 0){
+  coursesBox.style.overflowY = "hidden";
+  
+  coursesBox.innerHTML = `
     <div class="no-departures-center">
       Brak nadchodzących odjazdów
     </div>
@@ -906,8 +909,6 @@ coursesBox.style.overflowY = "auto";
 });
 
   }
-
-coursesBox.style.overflowY = "auto";
 
 stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
 renderCourses();
