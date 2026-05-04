@@ -877,38 +877,40 @@ function renderCourses(){
   });
 
   all.sort((a,b)=>a.diff-b.diff);
+  
+  if(all.length === 0){
+  coursesBox.style.overflowY = "hidden";
+  
+  coursesBox.innerHTML = `
+    <div class="no-departures-center">
+      Brak nadchodzących odjazdów
+    </div>
+  `;
+  return;
+}
 
-  if(all.length===0){
-    coursesBox.innerHTML=`
-      <div class="no-rides">
-        Brak nadchodzących odjazdów
-      </div>
-    `;
-    return;
-  }
+coursesBox.style.overflowY = "auto";
 
-  coursesBox.classList.add("has-departures");
-
-  all.forEach(dep=>{
+ all.forEach(dep=>{
     coursesBox.innerHTML+=`
-      <div class="course">
-        <div class="left">
-          <div class="line glow" style="background:${dep.color}">
-            🚌 ${dep.line}
-          </div>
-          <div class="info">→ <b>${dep.direction}</b></div>
-        </div>
-
-        <div class="time-box">
-          <div class="start-time">${dep.time}</div>
-          <div class="countdown">
-            ${dep.diff>0 ? `za ${dep.diff} min` : "teraz"}
-          </div>
-        </div>
+    <div class="course">
+      <div class="left">
+      <div class="line" style="background:${dep.color}">
+  <img src="bus.svg" class="bus-icon">
+  <span>${dep.line}</span>
+</div>
+        <div class="info">→ <b>${dep.direction}</b></div>
       </div>
-    `;
-  });
+      <div class="time-box">
+        <div class="start-time">${dep.time}</div>
+        <div class="countdown">${dep.diff>0?`za ${dep.diff} min`:"teraz"}</div>
+      </div>
+    </div>`;
+});
+
   }
+
+coursesBox.style.overflowY = "auto";
 
 stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
 renderCourses();
