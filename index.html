@@ -877,8 +877,9 @@ function renderCourses(){
   });
 
   all.sort((a,b)=>a.diff-b.diff);
+  if(all.length === 0){
+  coursesBox.style.overflowY = "hidden";
   
-if(all.length === 0){
   coursesBox.innerHTML = `
     <div class="no-departures-center">
       Brak nadchodzących odjazdów
@@ -887,28 +888,25 @@ if(all.length === 0){
   return;
 }
 
-   all.forEach(dep=>{
-  
-   coursesBox.innerHTML+=`
-  <div class="course">
-   <div class="left">
-   <div class="line" style="background:${dep.color}">
-   <svg class="bus-icon" viewBox="0 0 24 24">
-    <path fill="black" d="M6 2C4.9 2 4 2.9 4 4v11c0 .55.22 1.05.59 1.41L4 
-     18v1h2v-1h12v1h2v-1l-.59-1.59c.37-.36.59-.86.59-1.41V4c0-1.1-.9-2-2-2H6zm0 
-     3h12v6H6V5zm1 8a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm10 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM6 12h12v3H6v-3z"/>
-    </svg>
-    <span>${dep.line}</span>
-  </div>
-      <div class="info">→ <b>${dep.direction}</b></div>
-       </div>
-       <div class="time-box">
-        <div class="start-time">${dep.time}</div>
-         <div class="countdown">${dep.diff>0?`za ${dep.diff} min`:"teraz"}</div>
+coursesBox.style.overflowY = "auto";
+
+ all.forEach(dep=>{
+    coursesBox.innerHTML+=`
+    <div class="course">
+      <div class="left">
+      <div class="line" style="background:${dep.color}">
+  <img src="bus.svg" class="bus-icon">
+  <span>${dep.line}</span>
+</div>
+        <div class="info">→ <b>${dep.direction}</b></div>
       </div>
-     </div>`;
-  });
-  
+      <div class="time-box">
+        <div class="start-time">${dep.time}</div>
+        <div class="countdown">${dep.diff>0?`za ${dep.diff} min`:"teraz"}</div>
+      </div>
+    </div>`;
+});
+
   }
 
 stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
