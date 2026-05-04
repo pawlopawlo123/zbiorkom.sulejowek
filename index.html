@@ -849,31 +849,7 @@ function renderCourses(){
     });
   });
 
-  all.sort((a,b)=>a.diff-b.diff);
-  coursesBox.innerHTML="";
-  coursesBox.classList.remove("has-departures");
-
-  const weekend=isWeekend();
-  let all=[];
-
-  Object.keys(stops[currentStopId].lines).forEach(lineNumber=>{
-    const line=stops[currentStopId].lines[lineNumber];
-    const schedule=weekend ? line.weekend : line.weekday;
-
-    schedule.forEach(start=>{
-      const diff=minutesLeft(start);
-
-      if(diff>=-1){
-        all.push({
-          line:lineNumber,
-          color:line.color,
-          direction:line.direction,
-          time:start,
-          diff
-        });
-      }
-    });
-  });
+  
 
   all.sort((a,b)=>a.diff-b.diff);
   if(all.length === 0){
