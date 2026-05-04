@@ -314,11 +314,11 @@ top:0;
   padding:20px;
 }
 
-.courses{
+#courses{
   margin-top:80px;
 }
 
-.courses.has-departures{
+#courses.has-departures{
   height:calc(100vh - 80px);
   overflow-y:auto;
   }
@@ -850,7 +850,6 @@ function renderCourses(){
   });
 
   all.sort((a,b)=>a.diff-b.diff);
-  function renderCourses(){
   coursesBox.innerHTML="";
   coursesBox.classList.remove("has-departures");
 
