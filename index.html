@@ -917,43 +917,27 @@ coursesBox.style.overflowY = "auto";
 
   }
 
-stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
-renderCourses();
-setInterval(renderCourses,30000);
-
-if ("serviceWorker" in navigator) {
- navigator.serviceWorker.register("sw.js");
-}
-
-let lastVersion = "";
-
-function showUpdating(){
- const bar = document.getElementById("updateBar");
- bar.classList.add("show");
-
- setTimeout(()=>{
-   location.reload(true);
- },2000);
-}
-
-async function checkVersion(){
- try{
-   const res = await fetch("index.html?v=" + Date.now());
-   const text = await res.text();
-
-   if(lastVersion && lastVersion !== text){
-      showUpdating();
-   }
-
-   lastVersion = text;
-
- }catch(e){}
-}
-
-checkVersion();
-setInterval(checkVersion,10000);
+stopTitle.textContent="Przystanek: "+stops[currentStopId].name; 
+  renderCourses(); 
+  setInterval(renderCourses,30000); 
+  
+  if ("serviceWorker" in navigator) { 
+    navigator.serviceWorker.register("sw.js"); 
+  } 
+  
+  let lastVersion = null 
+  
+    async function checkVersion(){ 
+    const res = await fetch(window.location.href, { cache: "no-store" }) 
+    const text = await res.text() 
+    const version = text if(lastVersion && version !== lastVersion){ 
+    showUpdateAvailable() 
+    } 
+    lastVersion = version 
+    } 
+  setInterval(checkVersion,10000) 
 </script>
-
+  
 <div id="busModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeBus()">&times;</span>
