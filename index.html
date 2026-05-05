@@ -303,9 +303,14 @@ top:0;
 }
 
 .bus-icon{
-  width:24px;
-  height:24px;
-  object-fit:contain;
+  width:18px;
+  height:18px;
+  background:white; /* kolor ikony */
+  -webkit-mask: url("bus.svg") no-repeat center;
+  -webkit-mask-size: contain;
+
+  mask: url("bus.svg") no-repeat center;
+  mask-size: contain;
 }
 
 .no-departures-center{
