@@ -320,6 +320,21 @@ top:0;
   font-weight:600;
   padding:20px;
 }
+
+.search-box{
+  margin:10px;
+  padding:12px;
+  border:none;
+  outline:none;
+  border-radius:12px;
+  background:#1c2b3d;
+  color:white;
+  font-size:16px;
+}
+
+.search-box::placeholder{
+  color:#8aa0b8;
+}
 </style>
 </head>
 
@@ -332,7 +347,16 @@ top:0;
 
 <div class="side-menu" id="sideMenu">
   <div class="menu-title">Wybierz przystanek:</div>
-  <div class="menu-list" id="menuList"></div>
+
+<input 
+id="searchStop"
+type="text"
+placeholder="Szukaj przystanku..."
+oninput="filterStops()"
+class="search-box"
+>
+
+<div class="menu-list" id="menuList"></div>
 </div>
 
 <!-- NOWE -->
@@ -763,6 +787,21 @@ function toggleMenu(){
 function closeMenu(){
   sideMenu.classList.remove("open");
   overlay.classList.remove("show");
+}
+
+function filterStops(){
+  const text = document.getElementById("searchStop").value.toLowerCase();
+  const items = document.querySelectorAll(".menu-item");
+
+  items.forEach(item=>{
+    const name = item.textContent.toLowerCase();
+
+    if(name.includes(text)){
+      item.style.display = "block";
+    }else{
+      item.style.display = "none";
+    }
+  });
 }
 
 Object.keys(stops).forEach(id=>{
