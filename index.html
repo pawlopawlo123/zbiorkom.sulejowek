@@ -320,11 +320,34 @@ top:0;
   font-weight:600;
   padding:20px;
 }
+
+#updateBar{
+position:fixed;
+top:-60px;
+left:0;
+right:0;
+height:55px;
+background:#00c853;
+color:white;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:99999;
+transition:0.4s;
+box-shadow:0 4px 12px rgba(0,0,0,.35);
+}
+
+#updateBar.show{
+top:0;
+}
 </style>
 </head>
 
 <body>
 
+<div id="updateBar">Pobieranie aktualizacji...</div>
+  
 <div class="topbar">
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
   <div id="stopTitle"></div>
@@ -891,21 +914,25 @@ if ("serviceWorker" in navigator) {
 
 let lastVersion = null
 
-async function checkVersion(){
+renderCourses();
+setInterval(renderCourses,30000);
 
-  const res = await fetch(window.location.href, { cache: "no-store" })
-  const text = await res.text()
-
-  const version = text
-
-  if(lastVersion && version !== lastVersion){
-    showUpdateAvailable()
-  }
-
-  lastVersion = version
+if ("serviceWorker" in navigator) {
+ navigator.serviceWorker.register("sw.js");
 }
 
-setInterval(checkVersion,10000)
+let lastVersion = null;
+
+async function checkVersion(){
+...
+}
+
+function showUpdating(){
+...
+}
+
+setInterval(checkVersion,10000);
+</script>
 </script>
 
 <div id="busModal" class="modal">
