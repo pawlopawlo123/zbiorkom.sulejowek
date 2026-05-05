@@ -859,8 +859,6 @@ function renderCourses(){
     });
   });
 
-  
-
   all.sort((a,b)=>a.diff-b.diff);
   if(all.length === 0){
   coursesBox.style.overflowY = "hidden";
@@ -897,22 +895,25 @@ coursesBox.style.overflowY = "auto";
 stopTitle.textContent="Przystanek: "+stops[currentStopId].name; 
   renderCourses(); 
   setInterval(renderCourses,30000); 
-  
-  if ("serviceWorker" in navigator) { 
-    navigator.serviceWorker.register("sw.js"); 
+  if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js"); 
   } 
   
   let lastVersion = null 
   
-    async function checkVersion(){ 
-    const res = await fetch(window.location.href, { cache: "no-store" }) 
-    const text = await res.text() 
-    const version = text if(lastVersion && version !== lastVersion){ 
+  async function checkVersion(){ 
+    
+  const res = await fetch(window.location.href, { cache: "no-store" }) 
+  const text = await res.text() 
+    
+  const version = text 
+    if(lastVersion && version !== lastVersion) { 
     showUpdateAvailable() 
     } 
+    
     lastVersion = version 
-    } 
-  setInterval(checkVersion,10000) 
+  } 
+setInterval(checkVersion,10000)
 </script>
   
 <div id="busModal" class="modal">
