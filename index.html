@@ -305,12 +305,7 @@ top:0;
 .bus-icon{
   width:24px;
   height:24px;
-  background:white; /* kolor ikony */
-  -webkit-mask: url("bus.svg") no-repeat center;
-  -webkit-mask-size: contain;
-
-  mask: url("bus.svg") no-repeat center;
-  mask-size: contain;
+  object-fit:contain;
 }
 
 .no-departures-center{
@@ -873,7 +868,7 @@ coursesBox.style.overflowY = "auto";
     <div class="course">
       <div class="left">
       <div class="line" style="background:${dep.color}">
-  <div class="bus-icon"></div>
+ <img src="bus.svg" class="bus-icon">
   <span>${dep.line}</span>
 </div>
         <div class="info">→ <b>${dep.direction}</b></div>
