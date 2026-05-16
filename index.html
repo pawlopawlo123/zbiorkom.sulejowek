@@ -16,12 +16,13 @@
 <meta name="theme-color" content="#0b111a">
 
 <style>
-body{ 
-  margin:0; 
-  background:#0f1720; 
-  color:white; 
-  font-family:system-ui; 
-  overflow:hidden;
+body{
+margin:0;
+background:#0f1720;
+color:white;
+font-family:system-ui;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
 }
 
 .topbar{
@@ -129,15 +130,12 @@ body{
   font-size:13px;
   color:#6faeff;
 }
-  #courses{
-  position:fixed;
-  top:70px;
-  left:0;
-  right:0;
-  bottom:0;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  }
+ #courses{
+margin-top:70px;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+padding-bottom:40px;
+}
 
   .no-departures{
   color:#aaa;
