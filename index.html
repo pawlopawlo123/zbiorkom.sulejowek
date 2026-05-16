@@ -369,6 +369,42 @@ flex:1;
 overflow-y:auto;
 -webkit-overflow-scrolling:touch;
 }
+
+.submenu{
+  position:fixed;
+  top:60px;
+  left:-260px;
+  width:260px;
+  height:calc(100vh - 60px);
+  background:#111b28;
+  transition:0.3s;
+  z-index:101;
+
+  display:flex;
+  flex-direction:column;
+}
+
+.submenu.open{
+  left:0;
+}
+
+.submenu-top{
+  flex-shrink:0;
+  background:#0b111a;
+  border-bottom:1px solid #1c2b3d;
+}
+
+.back-btn{
+  padding:16px 18px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.submenu-list{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
 </style>
 </head>
 
@@ -393,26 +429,28 @@ overflow-y:auto;
 
 </div>
 
-<div id="stopsMenu" class="menu-page" style="display:none">
+<div class="submenu" id="submenu">
 
-<div class="menu-back" onclick="backToMainMenu()">
-← Powrót
+  <div class="submenu-top">
+    <div class="back-btn" onclick="showMainMenu()">
+      ← Powrót
+    </div>
+  </div>
+
+  <div class="submenu-list" id="submenuList"></div>
+
 </div>
 
-<div class="menu-scroll">
-<div class="menu-list" id="menuList"></div>
-</div>
+<div class="submenu" id="submenu">
 
-</div>
+  <div class="submenu-top">
+    <div class="back-btn" onclick="showMainMenu()">
+      ← Powrót
+    </div>
+  </div>
 
-<div id="linesMenu" class="menu-page" style="display:none">
+  <div class="submenu-list" id="submenuList"></div>
 
-<div class="menu-back" onclick="backToMainMenu()">
-← Powrót
-</div>
-
-<div class="menu-scroll">
-<div class="menu-list" id="linesList"></div>
 </div>
 
 </div>
