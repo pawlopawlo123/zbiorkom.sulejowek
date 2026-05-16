@@ -359,6 +359,18 @@ height:100%;
 overflow-y:auto;
 -webkit-overflow-scrolling:touch;
 }
+
+.menu-page{
+height:100%;
+display:flex;
+flex-direction:column;
+}
+
+.menu-scroll{
+flex:1;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+}
 </style>
 </head>
 
@@ -383,23 +395,27 @@ overflow-y:auto;
 
 </div>
 
-<div id="stopsMenu" style="display:none">
+<div id="stopsMenu" class="menu-page" style="display:none">
 
 <div class="menu-back" onclick="backToMainMenu()">
 ← Powrót
 </div>
 
+<div class="menu-scroll">
 <div class="menu-list" id="menuList"></div>
+</div>
 
 </div>
 
-<div id="linesMenu" style="display:none">
+<div id="linesMenu" class="menu-page" style="display:none">
 
 <div class="menu-back" onclick="backToMainMenu()">
 ← Powrót
 </div>
 
+<div class="menu-scroll">
 <div class="menu-list" id="linesList"></div>
+</div>
 
 </div>
 
