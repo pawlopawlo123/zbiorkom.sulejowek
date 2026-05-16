@@ -320,6 +320,37 @@ top:0;
   font-weight:600;
   padding:20px;
 }
+
+.big{
+font-size:18px;
+font-weight:700;
+padding:20px;
+}
+
+.menu-back{
+padding:16px;
+background:#162435;
+cursor:pointer;
+font-weight:600;
+border-bottom:1px solid #1c2b3d;
+}
+
+.line-route{
+padding:16px;
+border-bottom:1px solid #1c2b3d;
+}
+
+.line-title{
+font-size:18px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.route-stop{
+font-size:14px;
+color:#9fb3c8;
+margin:5px 0;
+}
 </style>
 </head>
 
@@ -331,8 +362,47 @@ top:0;
 </div>
 
 <div class="side-menu" id="sideMenu">
-<div class="menu-title">Wybierz przystanek:</div>
+
+<div id="mainMenu">
+
+<div class="menu-item big" onclick="openStopsMenu()">
+🚏 Wybór przystanku
+</div>
+
+<div class="menu-item big" onclick="openLinesMenu()">
+🚌 Trasy linii
+</div>
+
+</div>
+
+<div id="stopsMenu" style="display:none">
+
+<div class="menu-back" onclick="backToMainMenu()">
+← Powrót
+</div>
+
+<div class="menu-title">
+Wybór przystanku
+</div>
+
 <div class="menu-list" id="menuList"></div>
+
+</div>
+
+<div id="linesMenu" style="display:none">
+
+<div class="menu-back" onclick="backToMainMenu()">
+← Powrót
+</div>
+
+<div class="menu-title">
+Trasy linii
+</div>
+
+<div class="menu-list" id="linesList"></div>
+
+</div>
+
 </div>
 
 <!-- NOWE -->
@@ -752,6 +822,89 @@ const sideMenu = document.getElementById("sideMenu");
 const menuList = document.getElementById("menuList");
 const stopTitle = document.getElementById("stopTitle");
 const overlay = document.getElementById("overlay");
+const linesData = {
+
+"A1":[
+"PKP Sulejówek Miłosna 01",
+"Krótka 01",
+"Wyspiańskiego 02",
+"Szekspira 02",
+"Dąbrowskiego 02",
+"Tramwajowa 02",
+"Długa 01",
+"Łomżyńska 01",
+"Partyzantów 01",
+"Łukasińskiego 01",
+"Dąbrowskiego 01",
+"Szekspira 01",
+"Wyspiańskiego 01",
+"Głowackiego 02",
+"PKP Sulejówek Miłosna 02",
+"Sulejówek Miłosna-Pomnik 01",
+"Kopernika 02",
+"Wilsona 04",
+"Polna 02",
+"Bydgoska",
+"Warecka 01",
+"Cicha 01",
+"Zelwerowicza 01",
+"PKP Sulejówek Miłosna 01",
+],
+
+"A2":[
+"PKP Sulejówek Miłosna 03",
+"Kutrzeby 01",
+"Wenecka 01",
+"Przejazd 01",
+"Szklarniowa 01",
+"Kossaka 01",
+"Konwaliowa 01",
+"Mariańska 01",
+"Kasprowicza 02",
+"Moniuszki 01",
+"Legionów 01",
+"Okuniewska 01",
+"Ogińskiego 01",
+"PKP Sulejówek 03",
+
+"PKP Sulejówek 03",
+"Ogińskiego 02",
+"Okuniewska 02",
+"Legionów 02",
+"Moniuszki 02",
+"Kasprowicza 01",
+"Mariańska 02",
+"Konwaliowa 02",
+"Kossaka 02",
+"Szklarniowa 02",
+"Przejazd 02",
+"Wenecka 02",
+"Kutrzeby 02",
+"PKP Sulejówek Miłosna 03",
+],
+
+"W3":[
+"PKP Sulejówek 01",
+"PKP Sulejówek 02"
+],
+
+"P02":[
+"Okuniew-Rynek 01",
+"Szosowa 01",
+"Łukasińskiego 01",
+"PKP Sulejówek Miłosna 02",
+"Rynek (Stanisławów) 01"
+],
+
+"P03":[
+"Michałów-Pętla 01",
+"Szosowa 01",
+"Łukasińskiego 01",
+"PKP Sulejówek Miłosna 02",
+"Okuniew-Rynek 01"
+]
+
+};
 
 let currentStopId = localStorage.getItem("selectedStop") || Object.keys(stops)[0];
 
@@ -763,6 +916,30 @@ function toggleMenu(){
 function closeMenu(){
   sideMenu.classList.remove("open");
   overlay.classList.remove("show");
+}
+
+function openStopsMenu(){
+
+document.getElementById("mainMenu").style.display="none";
+document.getElementById("stopsMenu").style.display="block";
+document.getElementById("linesMenu").style.display="none";
+
+}
+
+function openLinesMenu(){
+
+document.getElementById("mainMenu").style.display="none";
+document.getElementById("linesMenu").style.display="block";
+document.getElementById("stopsMenu").style.display="none";
+
+}
+
+function backToMainMenu(){
+
+document.getElementById("mainMenu").style.display="block";
+document.getElementById("stopsMenu").style.display="none";
+document.getElementById("linesMenu").style.display="none";
+
 }
 
 Object.keys(stops).forEach(id=>{
@@ -779,6 +956,30 @@ Object.keys(stops).forEach(id=>{
   };
 
   menuList.appendChild(div);
+});
+
+const linesList = document.getElementById("linesList");
+
+Object.keys(linesData).forEach(line=>{
+
+const box=document.createElement("div");
+
+box.className="line-route";
+
+box.innerHTML=`
+<div class="line-title">
+🚌 ${line}
+</div>
+
+${linesData[line].map(stop=>`
+<div class="route-stop">
+• ${stop}
+</div>
+`).join("")}
+`;
+
+linesList.appendChild(box);
+
 });
 
 function isHoliday(){
