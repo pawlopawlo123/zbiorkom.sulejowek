@@ -267,18 +267,20 @@ top:0;
   }
 
   .side-menu{
-  position:fixed;
-  top:60px;
-  left:-260px;
-  width:260px;
-  height:calc(100vh - 60px);
-  background:#111b28;
-  transition:0.3s;
-  box-shadow:2px 0 15px #000;
-  z-index:100;
+position:fixed;
+top:60px;
+left:-260px;
+width:260px;
+height:calc(100dvh - 60px);
+background:#111b28;
+transition:0.3s;
+box-shadow:2px 0 15px #000;
+z-index:100;
 
-  display:flex;              /* 🔥 KLUCZ */
-  flex-direction:column;     /* 🔥 KLUCZ */
+display:flex;
+flex-direction:column;
+
+overflow:hidden;
 }
 
 .side-menu.open{
@@ -350,6 +352,14 @@ margin-bottom:10px;
 font-size:14px;
 color:#9fb3c8;
 margin:5px 0;
+}
+
+#mainMenu,
+#stopsMenu,
+#linesMenu{
+height:100%;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
 }
 </style>
 </head>
