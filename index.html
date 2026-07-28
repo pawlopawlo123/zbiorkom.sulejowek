@@ -135,7 +135,6 @@ margin-top:70px;
 height:calc(100vh - 70px);
 overflow-y:auto;
 -webkit-overflow-scrolling:touch;
-padding-bottom:10px;
 box-sizing:border-box;
 }
 
@@ -1085,7 +1084,8 @@ function renderCourses(){
  if(all.length === 0){
 
 document.body.style.overflow = "hidden";
-
+coursesBox.style.overflowY = "auto";
+   
 coursesBox.innerHTML = `
 <div class="no-departures-center">
 W najbliższym czasie nie ma odjazdów z tego przystanku
@@ -1095,10 +1095,8 @@ W najbliższym czasie nie ma odjazdów z tego przystanku
 return;
 }
 
-document.body.style.overflow = "auto";
-
 coursesBox.style.overflowY = "auto";
-
+  
  all.forEach(dep=>{
     coursesBox.innerHTML+=`
     <div class="course">
