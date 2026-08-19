@@ -286,7 +286,15 @@ display:flex;
 flex-direction:column;
 
 overflow:hidden;
-  }
+}
+
+.menu-list{
+flex:1;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+padding-bottom:20px;
+min-height:0;
+}
 
 .side-menu.open{
   left:0;
@@ -302,11 +310,7 @@ overflow:hidden;
 
   flex-shrink:0;  /* 🔥 żeby nie znikał */
 }
-
-.menu-list{
-padding-bottom:20px;
-}
-
+  
 .bus-icon{
   width:24px;
   height:24px;
