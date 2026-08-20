@@ -1257,75 +1257,7 @@ stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
     lastVersion = version 
   } 
     setInterval(checkVersion,10000)
-  // PULL TO REFRESH
-let pullStartY = 0;
-let pullDistance = 0;
-let isPulling = false;
-
-document.addEventListener("touchstart", function(e) {
-
-  // Nie uruchamiamy odświeżania, gdy otwarte jest menu
-  if (sideMenu.classList.contains("open")) return;
-
-  // Tylko gdy jesteśmy na górze strony
-  if (window.scrollY === 0) {
-    pullStartY = e.touches[0].clientY;
-    isPulling = true;
-  }
-
-}, {passive:true});
-
-document.addEventListener("touchmove", function(e) {
-
-  if (!isPulling) return;
-
-  const currentY = e.touches[0].clientY;
-  pullDistance = currentY - pullStartY;
-
-  if (pullDistance > 0) {
-
-    const move = Math.min(pullDistance, 100);
-
-    document.getElementById("pullRefresh").style.transform =
-      `translate(-50%, ${-60 + move * 0.7}px)`;
-
-    document.getElementById("pullRefresh").style.opacity =
-      Math.min(pullDistance / 80, 1);
-
-    if (pullDistance >= 80) {
-      document.getElementById("pullRefresh").classList.add("ready");
-    } else {
-      document.getElementById("pullRefresh").classList.remove("ready");
-    }
-  }
-
-}, {passive:true});
-
-document.addEventListener("touchend", function() {
-
-  if (!isPulling) return;
-
-  if (pullDistance >= 80) {
-
-    document.getElementById("pullRefresh").classList.add("ready");
-
-    setTimeout(function() {
-      location.reload();
-    }, 300);
-
-  } else {
-
-    document.getElementById("pullRefresh").style.transform =
-      "translate(-50%,-60px)";
-
-    document.getElementById("pullRefresh").style.opacity = "0";
-
-  }
-
-  isPulling = false;
-  pullDistance = 0;
-
-});
+  
 </script>
 
 <!-- ODŚWIEŻANIE PRZEZ PRZECIĄGNIĘCIE W DÓŁ -->
