@@ -1255,32 +1255,68 @@ stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
     
     lastVersion = version 
   } 
-  setInterval(checkVersion,10000)
-</script>
+  <script>
+let pullStartY = 0;
+let pullDistance = 0;
+let pullingRefresh = false;
 
-<!-- ODŚWIEŻANIE PRZEZ PRZECIĄGNIĘCIE W DÓŁ -->
-<script>
-let startY = 0;
-let pulling = false;
+const pullRefresh = document.getElementById("pullRefresh");
 
-document.addEventListener("touchstart", function(e) {
-  if (coursesBox.scrollTop === 0) {
-    startY = e.touches[0].clientY;
-    pulling = true;
+coursesBox.addEventListener("touchstart", function(e){
+
+  if(coursesBox.scrollTop === 0){
+    pullStartY = e.touches[0].clientY;
+    pullingRefresh = true;
   }
+
 }, {passive:true});
 
-document.addEventListener("touchend", function(e) {
-  if (!pulling) return;
 
-  const endY = e.changedTouches[0].clientY;
-  const distance = endY - startY;
+coursesBox.addEventListener("touchmove", function(e){
 
-  if (distance > 80 && coursesBox.scrollTop === 0) {
-    location.reload();
+  if(!pullingRefresh) return;
+
+  const currentY = e.touches[0].clientY;
+  pullDistance = currentY - pullStartY;
+
+  if(pullDistance > 0){
+
+    const progress = Math.min(pullDistance / 100, 1);
+
+    pullRefresh.style.transform =
+      `translateX(-50%) translateY(${(-60 + progress * 70)}px)`;
+
+    pullRefresh.style.opacity = progress;
+
   }
 
-  pulling = false;
+}, {passive:true});
+
+
+coursesBox.addEventListener("touchend", function(){
+
+  if(!pullingRefresh) return;
+
+  if(pullDistance >= 80){
+
+    pullRefresh.classList.add("show");
+    pullRefresh.classList.add("loading");
+
+    setTimeout(function(){
+      location.reload();
+    }, 500);
+
+  }else{
+
+    pullRefresh.classList.remove("show");
+
+    pullRefresh.style.transform =
+      "translateX(-50%) translateY(-60px)";
+  }
+
+  pullingRefresh = false;
+  pullDistance = 0;
+
 });
 </script>
   
