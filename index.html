@@ -377,6 +377,35 @@ min-height:0; /* 🔥 TO NAPRAWIA SCROLL */
   min-height:0;
   flex-direction:column;
 }
+
+ #pullRefresh{
+  position:fixed;
+  top:60px;
+  left:50%;
+  transform:translate(-50%,-60px);
+  opacity:0;
+  z-index:5000;
+  pointer-events:none;
+}
+
+#pullSpinner{
+  width:32px;
+  height:32px;
+  border:4px solid #344454;
+  border-top-color:#6faeff;
+  border-radius:50%;
+  box-sizing:border-box;
+}
+
+#pullRefresh.ready #pullSpinner{
+  animation:pullSpin .7s linear infinite;
+}
+
+@keyframes pullSpin{
+  to{
+    transform:rotate(360deg);
+  }
+  }
 </style>
 </head>
 
