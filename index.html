@@ -1264,26 +1264,44 @@ stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
 <script>
 let startY = 0;
 let pulling = false;
+let refreshArea = null;
 
 document.addEventListener("touchstart", function(e) {
-  if (coursesBox.scrollTop === 0) {
+
+  const target = e.target.closest("#courses, .menu-list");
+
+  if (!target) {
+    pulling = false;
+    return;
+  }
+
+  if (target.scrollTop === 0) {
     startY = e.touches[0].clientY;
     pulling = true;
+    refreshArea = target;
+  } else {
+    pulling = false;
+    refreshArea = null;
   }
+
 }, {passive:true});
 
 document.addEventListener("touchend", function(e) {
-  if (!pulling) return;
+
+  if (!pulling || !refreshArea) return;
 
   const endY = e.changedTouches[0].clientY;
   const distance = endY - startY;
 
-  if (distance > 80 && coursesBox.scrollTop === 0) {
+  if (distance > 80 && refreshArea.scrollTop === 0) {
     location.reload();
   }
 
   pulling = false;
+  refreshArea = null;
+
 });
+                        
 </script>
   
 <div id="busModal" class="modal">
