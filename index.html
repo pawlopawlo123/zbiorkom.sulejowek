@@ -377,42 +377,10 @@ min-height:0; /* 🔥 TO NAPRAWIA SCROLL */
   min-height:0;
   flex-direction:column;
 }
-
- #pullRefresh{
-  position:fixed;
-  top:70px;
-  left:50%;
-  transform:translateX(-50%) translateY(-60px);
-  width:35px;
-  height:35px;
-  border:4px solid #344454;
-  border-top-color:#6faeff;
-  border-radius:50%;
-  z-index:500;
-  opacity:0;
-  transition:opacity .2s, transform .2s;
-  box-sizing:border-box;
-}
-
-#pullRefresh.show{
-  opacity:1;
-}
-
-#pullRefresh.loading{
-  transform:translateX(-50%) translateY(10px);
-  animation:spin .7s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:translateX(-50%) translateY(10px) rotate(360deg);
-  }
-}
 </style>
 </head>
 
 <body>
-<div id="pullRefresh"></div>
 
 <div class="topbar">
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -1255,70 +1223,45 @@ stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
     
     lastVersion = version 
   } 
-  <script>
-let pullStartY = 0;
-let pullDistance = 0;
-let pullingRefresh = false;
+    setInterval(checkVersion,10000)
+</script>
 
-const pullRefresh = document.getElementById("pullRefresh");
+<!-- ODŚWIEŻANIE PRZEZ PRZECIĄGNIĘCIE W DÓŁ -->
+<script>
+let startY = 0;
+let pulling = false;
 
-coursesBox.addEventListener("touchstart", function(e){
-
-  if(coursesBox.scrollTop === 0){
-    pullStartY = e.touches[0].clientY;
-    pullingRefresh = true;
+document.addEventListener("touchstart", function(e) {
+  if (coursesBox.scrollTop === 0) {
+    startY = e.touches[0].clientY;
+    pulling = true;
   }
-
 }, {passive:true});
 
+document.addEventListener("touchend", function(e) {
+  if (!pulling) return;
 
-coursesBox.addEventListener("touchmove", function(e){
+  const endY = e.changedTouches[0].clientY;
+  const distance = endY - startY;
 
-  if(!pullingRefresh) return;
-
-  const currentY = e.touches[0].clientY;
-  pullDistance = currentY - pullStartY;
-
-  if(pullDistance > 0){
-
-    const progress = Math.min(pullDistance / 100, 1);
-
-    pullRefresh.style.transform =
-      `translateX(-50%) translateY(${(-60 + progress * 70)}px)`;
-
-    pullRefresh.style.opacity = progress;
-
+  if (distance > 80 && coursesBox.scrollTop === 0) {
+    location.reload();
   }
 
-}, {passive:true});
-
-
-coursesBox.addEventListener("touchend", function(){
-
-  if(!pullingRefresh) return;
-
-  if(pullDistance >= 80){
-
-    pullRefresh.classList.add("show");
-    pullRefresh.classList.add("loading");
-
-    setTimeout(function(){
-      location.reload();
-    }, 500);
-
-  }else{
-
-    pullRefresh.classList.remove("show");
-
-    pullRefresh.style.transform =
-      "translateX(-50%) translateY(-60px)";
-  }
-
-  pullingRefresh = false;
-  pullDistance = 0;
-
+  pulling = false;
 });
 </script>
+  
+<div id="busModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeBus()">&times;</span>
+    <img id="busPhoto">
+    <div id="busDetails"></div>
+  </div>
+</div>
+  
+</body>
+</html>
   
 <div id="busModal" class="modal">
   <div class="modal-content">
