@@ -1223,7 +1223,33 @@ stopTitle.textContent="Przystanek: "+stops[currentStopId].name;
     
     lastVersion = version 
   } 
-setInterval(checkVersion,10000)
+  setInterval(checkVersion,10000)
+</script>
+
+<!-- ODŚWIEŻANIE PRZEZ PRZECIĄGNIĘCIE W DÓŁ -->
+<script>
+let startY = 0;
+let pulling = false;
+
+document.addEventListener("touchstart", function(e) {
+  if (coursesBox.scrollTop === 0) {
+    startY = e.touches[0].clientY;
+    pulling = true;
+  }
+}, {passive:true});
+
+document.addEventListener("touchend", function(e) {
+  if (!pulling) return;
+
+  const endY = e.changedTouches[0].clientY;
+  const distance = endY - startY;
+
+  if (distance > 80 && coursesBox.scrollTop === 0) {
+    location.reload();
+  }
+
+  pulling = false;
+});
 </script>
   
 <div id="busModal" class="modal">
