@@ -289,12 +289,13 @@ overflow:hidden;
 }
 
 .menu-list{
-  flex:1;
-  min-height:0;
+  height:calc(100vh - 130px);
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
   padding-bottom:20px;
+  box-sizing:border-box;
 }
+  
 .side-menu.open{
   left:0;
 }
