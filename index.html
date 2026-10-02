@@ -1215,16 +1215,16 @@ function renderCourses(){
   const start = Array.isArray(course) ? course[0] : course;
   const vehicle = Array.isArray(course) ? course[1] : "";
 
-  const diff=minutesLeft(start);
+  const diff = minutesLeft(start);
 
-  if(diff>=-1){
+  if(diff >= -1){
     all.push({
-      line:lineNumber,
-      color:line.color,
-      direction:line.direction,
-      time:start,
-      vehicle:vehicle,
-      diff
+      line: lineNumber,
+      color: line.color,
+      direction: line.direction,
+      time: start,
+      vehicle: vehicle,
+      diff: diff
     });
   }
 });
