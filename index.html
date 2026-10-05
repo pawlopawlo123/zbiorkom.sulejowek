@@ -84,8 +84,11 @@ overflow:hidden;
 
 .left{
   display:flex;
-  gap:14px;
-  align-items:center;
+  flex-direction:column;
+  gap:6px;
+  align-items:flex-start;
+  flex:1;
+  min-width:0;
 }
 
 .left > div{
@@ -429,6 +432,7 @@ min-height:0; /* 🔥 TO NAPRAWIA SCROLL */
   display:flex;
   align-items:center;
   gap:8px;
+  width:100%;
 }
 
 .line-directions .info{
