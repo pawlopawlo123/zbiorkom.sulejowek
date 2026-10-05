@@ -424,6 +424,12 @@ min-height:0; /* 🔥 TO NAPRAWIA SCROLL */
   margin-top:3px;
   white-space:nowrap;
 }
+
+.line-direction{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 </style>
 </head>
 
@@ -1270,6 +1276,7 @@ coursesBox.style.overflowY = "auto";
       <div class="left">
 
         <div>
+          <div class="line-directions">
           <div class="line" style="background:${dep.color}">
             <img src="bus.svg" class="bus-icon">
             <span>${dep.line}</span>
@@ -1278,6 +1285,7 @@ coursesBox.style.overflowY = "auto";
           <div class="info">
             → <b>${dep.direction}</b>
           </div>
+        </div>
 
           ${dep.vehicle ? `
           <div class="course-vehicle">
