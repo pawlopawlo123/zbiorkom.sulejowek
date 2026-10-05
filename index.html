@@ -1275,25 +1275,22 @@ coursesBox.style.overflowY = "auto";
     <div class="course">
       <div class="left">
 
-        <div>
-          <div class="line-directions">
-          <div class="line" style="background:${dep.color}">
-            <img src="bus.svg" class="bus-icon">
-            <span>${dep.line}</span>
-          </div>
+        <div class="line-directions">
+  <div class="line" style="background:${dep.color}">
+    <img src="bus.svg" class="bus-icon">
+    <span>${dep.line}</span>
+  </div>
 
-          <div class="info">
-            → <b>${dep.direction}</b>
-          </div>
-        </div>
+  <div class="info">
+    → <b>${dep.direction}</b>
+  </div>
+</div>
 
-          ${dep.vehicle ? `
-          <div class="course-vehicle">
-            Kurs obsługiwany przez: ${dep.vehicle}
-          </div>
-          ` : ""}
-
-        </div>
+${dep.vehicle ? `
+<div class="course-vehicle">
+  Kurs obsługiwany przez: ${dep.vehicle}
+</div>
+` : ""}
 
       </div>
 
